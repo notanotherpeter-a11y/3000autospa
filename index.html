@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3000 Auto Spa — Premium Mobile Car Detailing Melbourne</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+  <style>
+    :root {
+      --bg-primary:    #0D1117;
+      --bg-secondary:  #161B22;
+      --bg-tertiary:   #21262D;
+      --text-primary:  #F0F6FC;
+      --text-secondary:#8B949E;
+      --text-muted:    #6E7681;
+      --accent-blue:   #2F81F7;
+      --accent-emerald:#3FB950;
+      --accent-amber:  #D29922;
+      --border:        #30363D;
+      --border-subtle: #21262D;
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .fx-grain {
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: 0.35;
+    }
+    .fx-spotlight {
+      position: fixed; inset: 0; z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(600px circle at 50% 50%, rgba(47,129,247,0.07) 0%, transparent 70%);
+    }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 60px;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-logo span { color: var(--accent-blue); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.8rem; color: var(--text-secondary); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-cta { font-size: 0.8rem; font-weight: 500; padding: 0.45rem 1.1rem; background: var(--accent-blue); color: #fff; border-radius: var(--radius-sm); transition: opacity 0.2s; }
+    .nav-cta:hover { opacity: 0.85; }
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 9rem 2rem 4rem; max-width: 1100px; margin: 0 auto; z-index: 2;
+    }
+    .hero-status {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-secondary);
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: 0.3rem 0.8rem; margin-bottom: 1.8rem; width: fit-content;
+    }
+    .hero-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-emerald); animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(63,185,80,0.4); }
+      50%      { opacity: 0.7; box-shadow: 0 0 0 5px rgba(63,185,80,0); }
+    }
+    .hero-label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+    .hero-display { font-size: clamp(2.8rem, 6vw, 5.2rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    .hero-display .grad { background: linear-gradient(135deg, var(--accent-blue) 0%, #7ee8fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: 1.05rem; color: var(--text-secondary); max-width: 520px; line-height: 1.7; margin-bottom: 2rem; }
+    .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 3rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.875rem; font-weight: 500; padding: 0.6rem 1.4rem; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; transition: all 0.2s; font-family: var(--font-family); }
+    .btn-primary { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--text-primary); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--bg-secondary); border-color: var(--text-muted); }
+    .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .chip { display: flex; align-items: center; gap: 0.45rem; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.28rem 0.65rem; }
+    .chip .num { color: var(--accent-blue); }
+    #car-canvas {
+      position: absolute; right: -60px; top: 50%;
+      transform: translateY(-50%);
+      width: 560px; height: 420px; z-index: 3;
+      pointer-events: auto; cursor: grab;
+      background: #070d18;
+      border-radius: 12px;
+    }
+    #car-canvas:active { cursor: grabbing; }
+    .car-hint {
+      position: absolute; right: 20px; bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); z-index: 4;
+      display: flex; align-items: center; gap: 0.4rem;
+      animation: hint-fade 3s ease-in-out infinite;
+    }
+    .car-hint::before { content: '⟳'; color: var(--accent-blue); }
+    @keyframes hint-fade { 0%,100%{opacity:0.5} 50%{opacity:1} }
+    /* MOBILE: car below text, full width */
+    @media (max-width: 900px) {
+      #car-canvas {
+        position: relative; right: auto; top: auto;
+        transform: none; width: 100%; height: 380px;
+        margin-top: 2rem; display: block;
+        background: #070d18;
+        border-radius: 16px;
+      }
+      .car-hint { right: 1rem; bottom: 0.5rem; }
+      .hero { min-height: auto; padding-bottom: 2rem; }
+    }
+    .marquee-track { position: relative; z-index: 2; overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0.75rem 0; background: var(--bg-secondary); }
+    .marquee-inner { display: flex; white-space: nowrap; animation: marquee 30s linear infinite; }
+    .marquee-item { display: inline-flex; align-items: center; gap: 1rem; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); padding: 0 1.5rem; }
+    .marquee-item .sep { color: var(--accent-blue); font-size: 0.65rem; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    section { max-width: 1100px; margin: 0 auto; padding: 5rem 2rem; position: relative; z-index: 2; }
+    .section-heading { display: flex; align-items: flex-end; gap: 1.5rem; margin-bottom: 3rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+    .section-num { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--accent-blue); white-space: nowrap; }
+    .section-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+    .section-sub { font-size: 0.875rem; color: var(--text-muted); margin-left: auto; text-align: right; max-width: 260px; line-height: 1.5; }
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+    .step-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; transition: border-color 0.25s, transform 0.25s; }
+    .step-card:hover { border-color: var(--accent-blue); transform: translateY(-3px); }
+    .step-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+    .step-num { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .step-name { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step-desc { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.6; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+    .service-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; transition: border-color 0.25s, transform 0.25s; position: relative; overflow: hidden; }
+    .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-blue), transparent); opacity: 0; transition: opacity 0.3s; }
+    .service-card:hover::before { opacity: 1; }
+    .service-card:hover { border-color: var(--accent-blue); transform: translateY(-3px); }
+    .service-card.featured { border-color: var(--accent-blue); background: linear-gradient(135deg, rgba(47,129,247,0.08) 0%, var(--bg-secondary) 100%); }
+    .service-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 100px; margin-bottom: 1rem; }
+    .badge-blue  { background: rgba(47,129,247,0.15); color: var(--accent-blue); border: 1px solid rgba(47,129,247,0.3); }
+    .badge-green { background: rgba(63,185,80,0.15); color: var(--accent-emerald); border: 1px solid rgba(63,185,80,0.3); }
+    .badge-amber { background: rgba(210,153,34,0.15); color: var(--accent-amber); border: 1px solid rgba(210,153,34,0.3); }
+    .service-name { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .service-price { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.75rem; }
+    .service-price span { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+    .service-desc { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem; }
+    .service-features { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+    .service-features li { display: flex; align-items: center; gap: 0.55rem; font-size: 0.8rem; color: var(--text-secondary); }
+    .service-features li::before { content: '✓'; color: var(--accent-emerald); font-size: 0.7rem; font-weight: 700; }
+    .facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; }
+    .fact-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; text-align: center; }
+    .fact-num { font-family: var(--font-mono); font-size: 2.4rem; font-weight: 700; color: var(--accent-blue); line-height: 1; margin-bottom: 0.4rem; }
+    .fact-label { font-size: 0.8rem; color: var(--text-secondary); }
+    .pills { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .pill { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 100px; padding: 0.35rem 0.85rem; transition: border-color 0.2s, color 0.2s; }
+    .pill:hover { border-color: var(--accent-blue); color: var(--text-primary); }
+    .pill .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent-emerald); }
+    .pricing-toggle { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+    .toggle-btn { font-size: 0.8rem; font-weight: 500; padding: 0.4rem 1rem; border-radius: 100px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; font-family: var(--font-family); }
+    .toggle-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+    .savings-badge { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(63,185,80,0.15); color: var(--accent-emerald); border: 1px solid rgba(63,185,80,0.3); border-radius: 100px; padding: 0.2rem 0.6rem; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+    .price-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; transition: border-color 0.25s; }
+    .price-card.highlight { border-color: var(--accent-blue); background: linear-gradient(135deg, rgba(47,129,247,0.08) 0%, var(--bg-secondary) 100%); }
+    .price-tier { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .price-amount { font-family: var(--font-mono); font-size: 2.8rem; font-weight: 700; color: var(--text-primary); line-height: 1; margin-bottom: 0.3rem; }
+    .price-amount sup { font-size: 1.2rem; vertical-align: super; }
+    .price-note { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.75rem; }
+    .price-features li { display: flex; align-items: center; gap: 0.55rem; font-size: 0.83rem; color: var(--text-secondary); }
+    .price-features li .check { color: var(--accent-emerald); font-size: 0.7rem; }
+    .price-features li .x { color: var(--text-muted); font-size: 0.7rem; }
+    /* ── SIZE TABS ───────────────────────────────────────── */
+    .size-tabs {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .size-tab {
+      display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+      padding: 0.8rem 1.4rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer; font-family: var(--font-family);
+      transition: all 0.2s; flex: 1; min-width: 120px;
+    }
+    .size-tab:hover { border-color: var(--accent-blue); }
+    .size-tab.active {
+      border-color: var(--accent-blue);
+      background: rgba(47,129,247,0.1);
+    }
+    .size-icon { font-size: 1.4rem; }
+    .size-label {
+      font-size: 0.9rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .size-tab.active .size-label { color: var(--accent-blue); }
+    .size-eg {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.08em; color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    /* ── DETAIL PROCESS TIMELINE ────────────────────────── */
+    .process-track {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .process-line {
+      position: absolute;
+      left: 28px;
+      top: 56px;
+      bottom: 56px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent-blue), rgba(47,129,247,0.1));
+      z-index: 0;
+    }
+    @media (min-width: 900px) {
+      .process-track {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0;
+      }
+      .process-line {
+        left: 56px;
+        right: 56px;
+        top: 28px;
+        bottom: auto;
+        width: auto;
+        height: 2px;
+        background: linear-gradient(to right, var(--accent-blue), rgba(47,129,247,0.15));
+      }
+    }
+    .process-step {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.5rem 0;
+    }
+    @media (min-width: 900px) {
+      .process-step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        flex: 1;
+        padding: 0 1rem;
+        gap: 1rem;
+      }
+    }
+    .process-node {
+      flex-shrink: 0;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .process-step:hover .process-node {
+      border-color: var(--accent-blue);
+      background: rgba(47,129,247,0.08);
+      box-shadow: 0 0 24px rgba(47,129,247,0.25);
+    }
+    .process-num {
+      position: absolute;
+      top: -6px; right: -6px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      display: flex; align-items: center; justify-content: center;
+      letter-spacing: 0;
+    }
+    .process-body { flex: 1; }
+    @media (min-width: 900px) { .process-body { flex: none; } }
+    .process-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 0.35rem;
+    }
+    .process-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+    .process-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .process-divider {
+      display: none;
+    }
+    @media (min-width: 900px) {
+      .process-divider {
+        display: flex;
+        align-items: center;
+        padding-top: 28px;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        flex-shrink: 0;
+      }
+    }
+    .process-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.25rem;
+      background: rgba(47,129,247,0.07);
+      border: 1px solid rgba(47,129,247,0.2);
+      border-radius: var(--radius-lg);
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .process-badge strong { color: var(--accent-blue); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+    .testi-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; }
+    .testi-stars { color: var(--accent-amber); font-size: 0.8rem; margin-bottom: 0.75rem; }
+    .testi-quote { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 0.75rem; }
+    .testi-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-blue), #7ee8fa); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: #fff; }
+    .testi-name { font-size: 0.85rem; font-weight: 600; }
+    .testi-role { font-size: 0.75rem; color: var(--text-muted); }
+    .booking-wrapper { display: grid; grid-template-columns: 1fr 1.3fr; gap: 2rem; }
+    @media (max-width: 768px) { .booking-wrapper { grid-template-columns: 1fr; } }
+    .booking-info h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .booking-info p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+    .contact-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-list li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.83rem; color: var(--text-secondary); }
+    .booking-form { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .form-group label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .form-group input, .form-group select, .form-group textarea { background: var(--bg-primary); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-family); font-size: 0.875rem; padding: 0.6rem 0.85rem; outline: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent-blue); }
+    .form-group select option { background: var(--bg-secondary); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .faq-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .faq-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; transition: border-color 0.2s; }
+    .faq-item.open { border-color: var(--accent-blue); }
+    .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 1.25rem; cursor: pointer; font-size: 0.9rem; font-weight: 500; user-select: none; }
+    .faq-q .arrow { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.25s; }
+    .faq-item.open .arrow { transform: rotate(180deg); color: var(--accent-blue); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; padding: 0 1.25rem; }
+    .faq-item.open .faq-a { max-height: 300px; padding: 0 1.25rem 1.1rem; }
+    footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; position: relative; z-index: 2; }
+    .footer-logo { font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .footer-logo span { color: var(--accent-blue); }
+    .footer-sub { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 2rem; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.78rem; color: var(--text-secondary); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-primary); }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
+    .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.7); display: none; place-items: center; backdrop-filter: blur(4px); }
+    .modal-overlay.show { display: grid; }
+    .modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 2.5rem 2rem; text-align: center; max-width: 380px; width: 90%; }
+    .modal-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .modal-msg { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    /* ── HERO BG CANVAS ──────────────────────────────────── */
+    #hero-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* ── HERO PARALLAX LAYERS ────────────────────────────── */
+    .hero-content {
+      position: relative; z-index: 2;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .parallax-slow  { will-change: transform; transition: transform 0.15s ease-out; }
+    .parallax-mid   { will-change: transform; transition: transform 0.1s ease-out; }
+    .parallax-fast  { will-change: transform; transition: transform 0.06s ease-out; }
+    /* ── 3D TILT CARDS ───────────────────────────────────── */
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+    .tilt-card:hover {
+      box-shadow: 0 20px 60px rgba(47,129,247,0.2), 0 0 30px rgba(47,129,247,0.1);
+    }
+    .tilt-card .card-inner {
+      transform: translateZ(20px);
+      pointer-events: none;
+    }
+    /* ── SCROLL 3D ENTRANCE ──────────────────────────────── */
+    .reveal-3d {
+      opacity: 0;
+      transform: perspective(800px) rotateX(18deg) translateY(40px) scale(0.96);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-3d.visible {
+      opacity: 1;
+      transform: perspective(800px) rotateX(0deg) translateY(0) scale(1);
+    }
+    /* ── HOLOGRAPHIC BADGE ───────────────────────────────── */
+    .holo-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      background: transparent;
+      pointer-events: none;
+      animation: holo-spin 8s linear infinite;
+    }
+    @keyframes holo-spin {
+      0%   { transform: rotate(0deg) scale(1); }
+      50%  { transform: rotate(180deg) scale(1.05); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    /* ── NEON GLOW PULSE ─────────────────────────────────── */
+    @keyframes neon-pulse {
+      0%,100% { text-shadow: 0 0 20px rgba(47,129,247,0.5), 0 0 40px rgba(47,129,247,0.2); }
+      50%     { text-shadow: 0 0 40px rgba(47,129,247,0.9), 0 0 80px rgba(47,129,247,0.4), 0 0 120px rgba(126,232,250,0.2); }
+    }
+    .hero-display .grad {
+      animation: neon-pulse 3s ease-in-out infinite;
+    }
+    /* ── FLOATING ORBS ───────────────────────────────────── */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(60px);
+      animation: orb-drift 10s ease-in-out infinite alternate;
+    }
+    .hero-orb.orb1 {
+      width: 400px; height: 400px;
+      background: rgba(47,129,247,0.08);
+      top: 10%; right: 5%;
+      animation-delay: 0s;
+    }
+    .hero-orb.orb2 {
+      width: 300px; height: 300px;
+      background: rgba(63,185,80,0.06);
+      bottom: 15%; left: 10%;
+      animation-delay: -4s;
+    }
+    .hero-orb.orb3 {
+      width: 250px; height: 250px;
+      background: rgba(126,232,250,0.05);
+      top: 40%; left: 30%;
+      animation-delay: -7s;
+    }
+    @keyframes orb-drift {
+      0%   { transform: translate(0,0) scale(1); }
+      100% { transform: translate(30px, -20px) scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+<canvas id="hero-bg"></canvas>
+<div class="fx-grain"></div>
+<div class="fx-spotlight" id="spotlight"></div>
+
+<nav>
+  <div class="nav-logo">3000<span>.</span>AUTO<span>SPA</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#areas">Areas</a></li>
+    <li><a href="#booking">Book</a></li>
+  </ul>
+  <a href="#booking" class="btn btn-primary nav-cta">Book Now</a>
+</nav>
+
+<section class="hero">
+  <!-- Ambient glow orbs -->
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
+  <div class="hero-content">
+    <div class="parallax-slow">
+      <div class="hero-status">
+        <span class="dot"></span>
+        DETAILERS AVAILABLE · MELBOURNE, AU
+      </div>
+      <div class="hero-label">[ INDEX / 00 ] — HOME CAR DETAILING SERVICE</div>
+    </div>
+    <div class="parallax-mid">
+      <h1 class="hero-display">
+        PREMIUM<br><span class="grad">HOME</span><br>DETAILING
+      </h1>
+    </div>
+    <div class="parallax-slow">
+      <p class="hero-sub">
+        We come to your home. Professional-grade car detailing done right in your driveway — no drop-off, no waiting, anywhere in Melbourne.
+      </p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn btn-primary">→ Book a Service</a>
+        <a href="#services" class="btn btn-secondary">View Services</a>
+      </div>
+      <div class="hero-chips">
+        <span class="chip"><span class="num">[ 01 ]</span> Express Wash</span>
+        <span class="chip"><span class="num">[ 02 ]</span> Full Detail</span>
+        <span class="chip"><span class="num">[ 03 ]</span> Ceramic Coat</span>
+        <span class="chip"><span class="num">[ 04 ]</span> Eco-Friendly</span>
+      </div>
+    </div>
+  </div>
+  <canvas id="car-canvas"></canvas>
+  <div class="car-hint">DRAG TO ROTATE</div>
+</section>
+
+<div class="marquee-track">
+  <div class="marquee-inner" id="marquee-inner"></div>
+</div>
+
+<section id="how-it-works">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 01 ]</span>
+    <h2 class="section-title">How It Works</h2>
+    <span class="section-sub">Book online. We come to your home. You don't move an inch.</span>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card reveal tilt-card">
+      <div class="step-icon">📱</div>
+      <div class="step-num">[ STEP 01 ]</div>
+      <div class="step-name">Book Online</div>
+      <div class="step-desc">Select your service, choose a time slot, and enter your home address. Done in under 2 minutes.</div>
+    </div>
+    <div class="step-card reveal tilt-card">
+      <div class="step-icon">📍</div>
+      <div class="step-num">[ STEP 02 ]</div>
+      <div class="step-name">We Come to You</div>
+      <div class="step-desc">Our detailer arrives at your home with all equipment — water, power, products. You stay comfortable inside while we work in your driveway.</div>
+    </div>
+    <div class="step-card reveal tilt-card">
+      <div class="step-icon">✨</div>
+      <div class="step-num">[ STEP 03 ]</div>
+      <div class="step-name">Relax at Home</div>
+      <div class="step-desc">We work in your driveway — you don't need to supervise. Have a coffee, work, do whatever. We handle everything.</div>
+    </div>
+    <div class="step-card reveal tilt-card">
+      <div class="step-icon">🏆</div>
+      <div class="step-num">[ STEP 04 ]</div>
+      <div class="step-name">Car's Done. We're Gone.</div>
+      <div class="step-desc">We SMS you when finished. Walk outside to a spotless car — 100% satisfaction guaranteed or we come back free.</div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 02 ]</span>
+    <h2 class="section-title">Services</h2>
+    <span class="section-sub">From quick express washes to full luxury details.</span>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-badge badge-green">Express</span>
+      <div class="service-name">Express Wash</div>
+      <div class="service-price">$119 <span>– $179</span></div>
+      <p class="service-desc">Quick, efficient exterior and interior clean. Perfect for regular maintenance.</p>
+      <ul class="service-features">
+        <li>Full exterior wash &amp; rinse</li>
+        <li>Tyre &amp; rim clean</li>
+        <li>Interior vacuum</li>
+        <li>Window clean</li>
+        <li>Dashboard wipe-down</li>
+      </ul>
+    </div>
+    <div class="service-card featured reveal">
+      <span class="service-badge badge-blue">Most Popular</span>
+      <div class="service-name">Full Detail</div>
+      <div class="service-price">$299 <span>– $499</span></div>
+      <p class="service-desc">Comprehensive inside-out detailing. Leaves your car looking showroom-ready.</p>
+      <ul class="service-features">
+        <li>Everything in Express</li>
+        <li>Hand wax &amp; polish</li>
+        <li>Leather conditioning</li>
+        <li>Engine bay clean</li>
+        <li>Odour treatment</li>
+      </ul>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-badge badge-amber">Premium</span>
+      <div class="service-name">Ceramic Coat</div>
+      <div class="service-price">From <span>$999</span></div>
+      <p class="service-desc">Long-lasting nano-ceramic coating for ultimate paint protection and gloss.</p>
+      <ul class="service-features">
+        <li>Full decontamination wash</li>
+        <li>Paint correction (single-stage)</li>
+        <li>Ceramic coating application</li>
+        <li>2-year protection warranty</li>
+        <li>Hydrophobic finish</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 03 ]</span>
+    <h2 class="section-title">By The Numbers</h2>
+  </div>
+  <div class="facts-grid">
+    <div class="fact-card reveal reveal-3d"><div class="fact-num">1,800+</div><div class="fact-label">Cars Detailed</div></div>
+    <div class="fact-card reveal reveal-3d"><div class="fact-num">28</div><div class="fact-label">Melbourne Suburbs</div></div>
+    <div class="fact-card reveal reveal-3d"><div class="fact-num">98%</div><div class="fact-label">Satisfaction Rate</div></div>
+    <div class="fact-card reveal reveal-3d"><div class="fact-num">4.9★</div><div class="fact-label">Average Rating</div></div>
+  </div>
+</section>
+
+<section id="areas">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 04 ]</span>
+    <h2 class="section-title">Service Areas</h2>
+    <span class="section-sub">All metropolitan Melbourne zones covered.</span>
+  </div>
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+    <div class="service-card reveal" style="flex:1; min-width:220px; padding:1.25rem;">
+      <div class="step-num">[ ZONE 01 ] — FREE</div>
+      <div class="step-name" style="font-size:0.95rem; margin:0.3rem 0;">Inner Melbourne (0–10km)</div>
+      <div class="step-desc">CBD, South Yarra, Richmond, Fitzroy, Carlton, St Kilda &amp; more</div>
+    </div>
+    <div class="service-card reveal" style="flex:1; min-width:220px; padding:1.25rem;">
+      <div class="step-num">[ ZONE 02 ] — +$20</div>
+      <div class="step-name" style="font-size:0.95rem; margin:0.3rem 0;">Middle Suburbs (10–25km)</div>
+      <div class="step-desc">Box Hill, Glen Waverley, Caulfield, Essendon, Preston &amp; more</div>
+    </div>
+    <div class="service-card reveal" style="flex:1; min-width:220px; padding:1.25rem;">
+      <div class="step-num">[ ZONE 03 ] — +$35</div>
+      <div class="step-name" style="font-size:0.95rem; margin:0.3rem 0;">Outer Suburbs (25–40km)</div>
+      <div class="step-desc">Dandenong, Frankston, Ringwood, Broadmeadows &amp; more</div>
+    </div>
+  </div>
+  <div class="pills reveal">
+    <span class="pill"><span class="dot"></span>Melbourne CBD</span>
+    <span class="pill"><span class="dot"></span>South Yarra</span>
+    <span class="pill"><span class="dot"></span>Richmond</span>
+    <span class="pill"><span class="dot"></span>St Kilda</span>
+    <span class="pill"><span class="dot"></span>Fitzroy</span>
+    <span class="pill"><span class="dot"></span>Carlton</span>
+    <span class="pill"><span class="dot"></span>Hawthorn</span>
+    <span class="pill"><span class="dot"></span>Toorak</span>
+    <span class="pill"><span class="dot"></span>Box Hill</span>
+    <span class="pill"><span class="dot"></span>Glen Waverley</span>
+    <span class="pill"><span class="dot"></span>Caulfield</span>
+    <span class="pill"><span class="dot"></span>Essendon</span>
+    <span class="pill"><span class="dot"></span>Preston</span>
+    <span class="pill"><span class="dot"></span>Frankston</span>
+    <span class="pill"><span class="dot"></span>Dandenong</span>
+    <span class="pill"><span class="dot"></span>Ringwood</span>
+    <span class="pill"><span class="dot"></span>Doncaster</span>
+    <span class="pill"><span class="dot"></span>Brighton</span>
+    <span class="pill"><span class="dot"></span>Port Melbourne</span>
+    <span class="pill"><span class="dot"></span>Moorabbin</span>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 05 ]</span>
+    <h2 class="section-title">Pricing</h2>
+    <span class="section-sub">Transparent pricing. No hidden fees.</span>
+  </div>
+  <div class="pricing-toggle reveal">
+    <button class="toggle-btn active" onclick="setToggle('onetime',this)">One-Time</button>
+    <button class="toggle-btn" onclick="setToggle('member',this)">Member</button>
+    <span class="savings-badge">Members save 30%</span>
+  </div>
+  <!-- SIZE TABS -->
+  <div class="size-tabs reveal">
+    <button class="size-tab active" onclick="setSize('small',this)">
+      <span class="size-icon">🚗</span>
+      <span class="size-label">Small</span>
+      <span class="size-eg">Hatch · Sedan</span>
+    </button>
+    <button class="size-tab" onclick="setSize('medium',this)">
+      <span class="size-icon">🚙</span>
+      <span class="size-label">Medium</span>
+      <span class="size-eg">SUV · Wagon</span>
+    </button>
+    <button class="size-tab" onclick="setSize('large',this)">
+      <span class="size-icon">🛻</span>
+      <span class="size-label">Large</span>
+      <span class="size-eg">4WD · Van · Ute</span>
+    </button>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- EXPRESS -->
+    <div class="price-card reveal">
+      <div class="price-tier">[ 01 ] — EXPRESS WASH</div>
+      <div class="price-amount onetime-price">
+        <span class="sz small"><sup>$</sup>119</span>
+        <span class="sz medium" style="display:none"><sup>$</sup>149</span>
+        <span class="sz large"  style="display:none"><sup>$</sup>179</span>
+      </div>
+      <div class="price-amount member-price" style="display:none">
+        <span class="sz small"><sup>$</sup>83</span>
+        <span class="sz medium" style="display:none"><sup>$</sup>104</span>
+        <span class="sz large"  style="display:none"><sup>$</sup>125</span>
+      </div>
+      <p class="price-note">1–2 hours · All equipment included</p>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Exterior wash &amp; dry</li>
+        <li><span class="check">✓</span> Interior vacuum</li>
+        <li><span class="check">✓</span> Window clean inside &amp; out</li>
+        <li><span class="check">✓</span> Tyre &amp; rim shine</li>
+        <li><span class="x">–</span> Hand wax / polish</li>
+      </ul>
+      <a href="#booking" class="btn btn-secondary" style="width:100%; justify-content:center;">Book Express</a>
+    </div>
+
+    <!-- FULL DETAIL -->
+    <div class="price-card highlight reveal">
+      <div class="price-tier">[ 02 ] — FULL DETAIL</div>
+      <div class="price-amount onetime-price">
+        <span class="sz small"><sup>$</sup>299</span>
+        <span class="sz medium" style="display:none"><sup>$</sup>349</span>
+        <span class="sz large"  style="display:none"><sup>$</sup>449</span>
+      </div>
+      <div class="price-amount member-price" style="display:none">
+        <span class="sz small"><sup>$</sup>209</span>
+        <span class="sz medium" style="display:none"><sup>$</sup>244</span>
+        <span class="sz large"  style="display:none"><sup>$</sup>314</span>
+      </div>
+      <p class="price-note">2–4 hours · Inside &amp; out showroom finish</p>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Everything in Express</li>
+        <li><span class="check">✓</span> Hand wax &amp; machine polish</li>
+        <li><span class="check">✓</span> Leather conditioning</li>
+        <li><span class="check">✓</span> Engine bay clean</li>
+        <li><span class="check">✓</span> Odour treatment</li>
+      </ul>
+      <a href="#booking" class="btn btn-primary" style="width:100%; justify-content:center;">Book Full Detail</a>
+    </div>
+
+    <!-- CERAMIC -->
+    <div class="price-card reveal">
+      <div class="price-tier">[ 03 ] — CERAMIC COAT</div>
+      <div class="price-amount onetime-price">
+        <span class="sz small"><sup>$</sup>999</span>
+        <span class="sz medium" style="display:none"><sup>$</sup>1,299</span>
+        <span class="sz large"  style="display:none"><sup>$</sup>1,599</span>
+      </div>
+      <div class="price-amount member-price" style="display:none">
+        <span class="sz small"><sup>$</sup>699</span>
+        <span class="sz medium" style="display:none"><sup>$</sup>909</span>
+        <span class="sz large"  style="display:none"><sup>$</sup>1,119</span>
+      </div>
+      <p class="price-note">4–8 hours · 2-year protection warranty</p>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Full decontamination wash</li>
+        <li><span class="check">✓</span> Single-stage paint correction</li>
+        <li><span class="check">✓</span> Nano-ceramic coating application</li>
+        <li><span class="check">✓</span> Hydrophobic finish</li>
+        <li><span class="check">✓</span> 2-year protection warranty</li>
+      </ul>
+      <a href="#booking" class="btn btn-secondary" style="width:100%; justify-content:center;">Get Ceramic Quote</a>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 06 ]</span>
+    <h2 class="section-title">The Detail Process</h2>
+    <span class="section-sub">You don't go anywhere. We come to you, do the job, and leave.</span>
+  </div>
+
+  <div class="process-track reveal">
+    <div class="process-line"></div>
+
+    <div class="process-step">
+      <div class="process-node">
+        📲
+        <span class="process-num">01</span>
+      </div>
+      <div class="process-body">
+        <div class="process-tag">Step 01 · 2 minutes</div>
+        <div class="process-title">Book From Home</div>
+        <div class="process-desc">Pick your service, enter your home address, and choose a time. Done in under 2 minutes — no calls, no back-and-forth.</div>
+      </div>
+    </div>
+
+    <div class="process-step">
+      <div class="process-node">
+        🚐
+        <span class="process-num">02</span>
+      </div>
+      <div class="process-body">
+        <div class="process-tag">Step 02 · We come to you</div>
+        <div class="process-title">We Show Up at Your Door</div>
+        <div class="process-desc">Our detailer arrives at your home with everything needed — water, power, products. Your driveway is our workshop.</div>
+      </div>
+    </div>
+
+    <div class="process-step">
+      <div class="process-node">
+        🛋️
+        <span class="process-num">03</span>
+      </div>
+      <div class="process-body">
+        <div class="process-tag">Step 03 · You do nothing</div>
+        <div class="process-title">Stay Inside & Relax</div>
+        <div class="process-desc">No supervision needed. Have a coffee, work from home, watch TV. We handle everything outside — you don't lift a finger.</div>
+      </div>
+    </div>
+
+    <div class="process-step">
+      <div class="process-node">
+        ✨
+        <span class="process-num">04</span>
+      </div>
+      <div class="process-body">
+        <div class="process-tag">Step 04 · In your driveway</div>
+        <div class="process-title">Full Detail Done Outside</div>
+        <div class="process-desc">Wash, polish, protect — every step completed right there at your home. Professional results without you going anywhere.</div>
+      </div>
+    </div>
+
+    <div class="process-step">
+      <div class="process-node">
+        🚗
+        <span class="process-num">05</span>
+      </div>
+      <div class="process-body">
+        <div class="process-tag">Step 05 · All done</div>
+        <div class="process-title">Car's Ready. We're Gone.</div>
+        <div class="process-desc">We let you know when we're finished. Your car looks brand new, your driveway is spotless, and we've already packed up and left.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="reveal" style="margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+    <div class="process-badge">🏠 <strong>We come to your home</strong>&nbsp;— you stay put</div>
+    <div class="process-badge">⏱ <strong>2–8 hrs</strong>&nbsp;depending on service</div>
+    <div class="process-badge">🔒 <strong>100% satisfaction</strong>&nbsp;guaranteed</div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 07 ]</span>
+    <h2 class="section-title">Reviews</h2>
+    <span class="section-sub">What Melbourne customers are saying.</span>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testi-card reveal tilt-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Booked Sunday night, they were at my place by 10am Monday. Didn't have to move my car anywhere — just came outside to a BMW that looked better than when I bought it."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">JM</div>
+        <div><div class="testi-name">James M.</div><div class="testi-role">South Yarra · BMW 3 Series</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal tilt-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Got the ceramic coating done — car has been sitting in the rain for two months and still beads water like day one. Remarkable product, great service."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SK</div>
+        <div><div class="testi-name">Sarah K.</div><div class="testi-role">Toorak · Porsche Macan</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal tilt-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"They came to my place in Doncaster while I was working from home. Didn't have to drop the car off anywhere — just walked outside to a fully detailed car. Brilliant."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">RL</div>
+        <div><div class="testi-name">Ryan L.</div><div class="testi-role">Doncaster · Toyota RAV4</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 08 ]</span>
+    <h2 class="section-title">Book a Service</h2>
+    <span class="section-sub">Fill in your details. We'll confirm within minutes.</span>
+  </div>
+  <div class="booking-wrapper">
+    <div class="booking-info reveal">
+      <h3>Ready to make your car shine?</h3>
+      <p>Our team will confirm your booking via SMS within 15 minutes. All detailers are vetted, insured, and equipped with professional-grade tools.</p>
+      <ul class="contact-list">
+        <li>🏠 Home service — we come to your driveway</li>
+        <li>📍 All Melbourne metro suburbs covered</li>
+        <li>⏰ Mon–Fri: 7am–6pm · Sat: 8am–5pm · Sun: 9am–4pm</li>
+        <li>📱 SMS confirmation when we're on our way</li>
+        <li>✅ 100% satisfaction guarantee</li>
+        <li>🌿 Eco-friendly products on request</li>
+        <li>💳 Card / PayPal / Apple Pay</li>
+      </ul>
+    </div>
+    <form class="booking-form reveal" id="booking-form">
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="Alex" required></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="04xx xxx xxx" required></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="you@email.com" required></div>
+      </div>
+      <div class="form-group">
+        <label>Service</label>
+        <select required>
+          <option value="">Select a service...</option>
+          <option>Express Wash — from $119</option>
+          <option>Full Detail — from $299</option>
+          <option>Ceramic Coat — from $999</option>
+          <option>Custom Quote</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Vehicle Type</label>
+          <select>
+            <option>Sedan</option><option>SUV / 4WD</option><option>Ute / Truck</option><option>Van</option><option>Luxury / Sports</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Preferred Date</label><input type="date" required></div>
+      </div>
+      <div class="form-group"><label>Home Suburb</label><input type="text" placeholder="e.g. South Yarra" required></div>
+      <div class="form-group"><label>Notes (optional)</label><textarea placeholder="Any special requests..."></textarea></div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:0.75rem;">→ Submit Booking Request</button>
+    </form>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 09 ]</span>
+    <h2 class="section-title">FAQ</h2>
+    <span class="section-sub">Quick answers to common questions.</span>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">What areas do you cover in Melbourne?<span class="arrow">▼</span></div>
+      <div class="faq-a">We service all metropolitan Melbourne suburbs across three zones. Inner suburbs (0–10km from CBD) have no travel fee. Middle suburbs (10–25km) have a $20 fee. Outer suburbs (25–40km) have a $35 fee.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">Do I need to be home during the service?<span class="arrow">▼</span></div>
+      <div class="faq-a">Not necessarily. As long as we can access your car in the driveway, you don't need to supervise us. Many customers work from home or run errands while we detail. We'll SMS you when we're done.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">What do I need to provide?<span class="arrow">▼</span></div>
+      <div class="faq-a">Just your car parked in the driveway. We bring everything — water, power, equipment, and products. No drop-off, no effort on your part.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">What's your cancellation policy?<span class="arrow">▼</span></div>
+      <div class="faq-a">4+ hours notice: no charge. 2–4 hours notice: 50% fee. Under 2 hours: full charge applies. Weather cancellations are always free — we'll reschedule at no cost.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">Do you use eco-friendly products?<span class="arrow">▼</span></div>
+      <div class="faq-a">Yes! We offer eco-conscious cleaning methods using biodegradable, waterless or low-water products. Just mention it when booking.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">How long does each service take?<span class="arrow">▼</span></div>
+      <div class="faq-a">Express Wash: 1–2 hours. Full Detail: 2–4 hours. Ceramic Coating: 4–6 hours. These are estimates based on vehicle size.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">What's included in the satisfaction guarantee?<span class="arrow">▼</span></div>
+      <div class="faq-a">If you're not 100% happy, contact us within 24 hours and we'll return to re-service — completely free. No arguments, no drama.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">3000<span>.</span>AUTO<span>SPA</span></div>
+  <p class="footer-sub">Premium Home Car Detailing · Melbourne, Australia</p>
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#areas">Areas</a></li>
+    <li><a href="#booking">Book Now</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 3000 Auto Spa Pty Ltd · All rights reserved</div>
+</footer>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-icon">🚗</div>
+    <div class="modal-title">Booking Received!</div>
+    <p class="modal-msg">Thanks! We'll confirm your booking via SMS within 15 minutes.</p>
+    <button class="btn btn-primary" onclick="closeModal()" style="width:100%; justify-content:center;">Close</button>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* ── HERO BG SCENE ───────────────────────────────────── */
+(function() {
+  const canvas = document.getElementById('hero-bg');
+  // On mobile, skip hero-bg WebGL so the car canvas can claim the context
+  if (!canvas || window.innerWidth <= 900) return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 300);
+  camera.position.z = 45;
+
+  // Colors for variety
+  const colors = [0x2f81f7, 0x7ee8fa, 0x3fb950, 0xa371f7];
+
+  // Floating wireframe shapes — larger & more vibrant
+  const shapes = [];
+  const geos = [
+    new THREE.IcosahedronGeometry(2.5, 0),
+    new THREE.OctahedronGeometry(2.8, 0),
+    new THREE.TetrahedronGeometry(3.0, 0),
+    new THREE.BoxGeometry(3.5, 3.5, 3.5),
+    new THREE.TorusGeometry(2.0, 0.5, 6, 12),
+    new THREE.TorusKnotGeometry(1.5, 0.4, 64, 8)
+  ];
+
+  for (let i = 0; i < 28; i++) {
+    const geo = geos[i % geos.length];
+    const col = colors[i % colors.length];
+    const mat = new THREE.MeshBasicMaterial({
+      color: col, wireframe: true,
+      transparent: true, opacity: 0.22 + Math.random() * 0.15
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    const scale = 0.6 + Math.random() * 2.5;
+    mesh.scale.setScalar(scale);
+    mesh.position.set(
+      (Math.random() - 0.5) * 110,
+      (Math.random() - 0.5) * 80,
+      (Math.random() - 0.5) * 35 - 5
+    );
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+    mesh.userData = {
+      rx: (Math.random() - 0.5) * 0.008,
+      ry: (Math.random() - 0.5) * 0.010,
+      rz: (Math.random() - 0.5) * 0.005,
+      floatSpeed: 0.25 + Math.random() * 0.6,
+      floatAmp: 1.0 + Math.random() * 2.0,
+      baseY: mesh.position.y,
+      pulseBase: mat.opacity
+    };
+    scene.add(mesh);
+    shapes.push(mesh);
+  }
+
+  // Neon ring portals
+  const ringColors = [0x2f81f7, 0x7ee8fa, 0xa371f7];
+  const rings = [];
+  for (let i = 0; i < 5; i++) {
+    const r = 4 + Math.random() * 8;
+    const ringGeo = new THREE.TorusGeometry(r, 0.06, 6, 60);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: ringColors[i % 3], transparent: true, opacity: 0.35
+    });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.position.set(
+      (Math.random() - 0.5) * 80,
+      (Math.random() - 0.5) * 50,
+      (Math.random() - 0.5) * 20 - 10
+    );
+    ring.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    ring.userData = {
+      rx: (Math.random() - 0.5) * 0.006,
+      ry: (Math.random() - 0.5) * 0.008,
+      baseOp: ringMat.opacity
+    };
+    scene.add(ring);
+    rings.push(ring);
+  }
+
+  // Connected particle network
+  const NODE_COUNT = 100;
+  const nodePos = [];
+  const nodeVel = [];
+  for (let i = 0; i < NODE_COUNT; i++) {
+    nodePos.push(
+      (Math.random() - 0.5) * 120,
+      (Math.random() - 0.5) * 80,
+      (Math.random() - 0.5) * 20
+    );
+    nodeVel.push(
+      (Math.random() - 0.5) * 0.05,
+      (Math.random() - 0.5) * 0.04,
+      0
+    );
+  }
+  const nodeBuf = new THREE.BufferGeometry();
+  nodeBuf.setAttribute('position', new THREE.Float32BufferAttribute(nodePos, 3));
+  const nodeMat = new THREE.PointsMaterial({
+    color: 0x2f81f7, size: 0.45,
+    transparent: true, opacity: 0.65,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  });
+  scene.add(new THREE.Points(nodeBuf, nodeMat));
+
+  const maxLines = 160;
+  const lineBuf = new THREE.BufferGeometry();
+  lineBuf.setAttribute('position', new THREE.BufferAttribute(new Float32Array(maxLines * 6), 3));
+  const lineSegs = new THREE.LineSegments(lineBuf, new THREE.LineBasicMaterial({
+    color: 0x2f81f7, transparent: true, opacity: 0.18,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  }));
+  scene.add(lineSegs);
+
+  // Camera target (mouse / gyro)
+  let camTX = 0, camTY = 0;
+
+  window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  });
+
+  let t = 0;
+  function bgAnimate() {
+    requestAnimationFrame(bgAnimate);
+    t += 0.012;
+
+    camera.position.x += (camTX * 6 - camera.position.x) * 0.03;
+    camera.position.y += (-camTY * 5 - camera.position.y) * 0.03;
+    camera.lookAt(0, 0, 0);
+
+    shapes.forEach((m, i) => {
+      m.rotation.x += m.userData.rx;
+      m.rotation.y += m.userData.ry;
+      m.rotation.z += m.userData.rz;
+      m.position.y = m.userData.baseY + Math.sin(t * m.userData.floatSpeed + i) * m.userData.floatAmp;
+      m.material.opacity = m.userData.pulseBase * (0.7 + 0.3 * Math.sin(t * 1.2 + i));
+    });
+
+    rings.forEach((r, i) => {
+      r.rotation.x += r.userData.rx;
+      r.rotation.y += r.userData.ry;
+      r.material.opacity = r.userData.baseOp * (0.6 + 0.4 * Math.sin(t * 0.8 + i * 1.5));
+    });
+
+    const pa = nodeBuf.attributes.position.array;
+    for (let i = 0; i < NODE_COUNT; i++) {
+      pa[i*3]   += nodeVel[i*3];
+      pa[i*3+1] += nodeVel[i*3+1];
+      if (Math.abs(pa[i*3])   > 65) nodeVel[i*3]   *= -1;
+      if (Math.abs(pa[i*3+1]) > 45) nodeVel[i*3+1] *= -1;
+    }
+    nodeBuf.attributes.position.needsUpdate = true;
+
+    let li = 0;
+    const lp = lineBuf.attributes.position.array;
+    for (let a = 0; a < NODE_COUNT && li < maxLines; a++) {
+      for (let b = a + 1; b < NODE_COUNT && li < maxLines; b++) {
+        const dx = pa[a*3] - pa[b*3], dy = pa[a*3+1] - pa[b*3+1];
+        if (dx*dx + dy*dy < 400) {
+          lp[li*6]=pa[a*3]; lp[li*6+1]=pa[a*3+1]; lp[li*6+2]=pa[a*3+2];
+          lp[li*6+3]=pa[b*3]; lp[li*6+4]=pa[b*3+1]; lp[li*6+5]=pa[b*3+2];
+          li++;
+        }
+      }
+    }
+    lineBuf.setDrawRange(0, li * 2);
+    lineBuf.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+  }
+  bgAnimate();
+
+  // Export camTX/camTY for gyro + mouse
+  window._setBgCam = (x, y) => { camTX = x; camTY = y; };
+})();
+
+/* ── PARALLAX (mouse + gyro) ─────────────────────────── */
+let heroMX = 0, heroMY = 0;
+
+function applyParallax(mx, my) {
+  document.querySelectorAll('.parallax-slow').forEach(el => {
+    el.style.transform = 'translate(' + (mx * -14) + 'px,' + (my * -10) + 'px)';
+  });
+  document.querySelectorAll('.parallax-mid').forEach(el => {
+    el.style.transform = 'translate(' + (mx * -28) + 'px,' + (my * -20) + 'px)';
+  });
+  if (window._setBgCam) window._setBgCam(mx, my);
+}
+
+// Mouse
+document.addEventListener('mousemove', e => {
+  heroMX = e.clientX / window.innerWidth  - 0.5;
+  heroMY = e.clientY / window.innerHeight - 0.5;
+  applyParallax(heroMX, heroMY);
+  document.getElementById('spotlight').style.background =
+    'radial-gradient(600px circle at ' + e.clientX + 'px ' + e.clientY + 'px, rgba(47,129,247,0.09) 0%, transparent 70%)';
+});
+
+// Gyroscope (mobile WOW factor)
+if (window.DeviceOrientationEvent) {
+  const requestGyro = () => {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().then(state => {
+        if (state === 'granted') window.addEventListener('deviceorientation', onGyro);
+      }).catch(() => {});
+    } else {
+      window.addEventListener('deviceorientation', onGyro);
+    }
+  };
+  // Auto-start on Android, request on iOS on first touch
+  document.addEventListener('touchstart', requestGyro, { once: true });
+
+  function onGyro(e) {
+    const gx = Math.max(-30, Math.min(30, e.gamma || 0)) / 30; // left/right tilt
+    const gy = Math.max(-30, Math.min(30, (e.beta || 0) - 45)) / 30; // fwd/back tilt
+    applyParallax(gx * 0.5, gy * 0.5);
+    document.getElementById('spotlight').style.background =
+      'radial-gradient(600px circle at ' + ((gx * 0.5 + 0.5) * 100) + '% ' + ((gy * 0.5 + 0.5) * 100) + '%, rgba(47,129,247,0.09) 0%, transparent 70%)';
+  }
+}
+
+/* ── 3D CARD TILT ────────────────────────────────────── */
+function initTiltCards() {
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    const handleMove = (cx, cy) => {
+      const rect = card.getBoundingClientRect();
+      const x = (cx - rect.left) / rect.width  - 0.5;
+      const y = (cy - rect.top)  / rect.height - 0.5;
+      card.style.transform =
+        'perspective(600px) rotateY(' + (x * 16) + 'deg) rotateX(' + (-y * 12) + 'deg) scale(1.03)';
+    };
+    const reset = () => {
+      card.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)';
+    };
+    // Mouse
+    card.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY));
+    card.addEventListener('mouseleave', reset);
+    // Touch
+    card.addEventListener('touchmove', e => {
+      e.preventDefault();
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+    card.addEventListener('touchend', reset);
+  });
+}
+initTiltCards();
+
+/* ── SCROLL 3D ENTRANCE ──────────────────────────────── */
+const obs3d = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal-3d').forEach(el => obs3d.observe(el));
+
+const services = ['Express Wash','Full Detail','Ceramic Coating','Paint Correction','Interior Detail','Engine Bay Clean','Headlight Restore','Leather Care','Odour Treatment','Upholstery Clean','Tyre & Rim Detail','Home Service'];
+const mi = document.getElementById('marquee-inner');
+mi.innerHTML = [...services,...services].map(s => '<span class="marquee-item"><span class="sep">✦</span>' + s + '</span>').join('');
+
+window.toggleFaq = function(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+};
+
+window.setSize = function(size, btn) {
+  document.querySelectorAll('.size-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.sz').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.sz.' + size).forEach(el => el.style.display = 'inline');
+};
+
+window.setToggle = function(mode, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const show = mode === 'member' ? 'member-price' : 'onetime-price';
+  const hide = mode === 'member' ? 'onetime-price' : 'member-price';
+  document.querySelectorAll('.' + show).forEach(el => el.style.display = 'block');
+  document.querySelectorAll('.' + hide).forEach(el => el.style.display = 'none');
+};
+
+document.getElementById('booking-form').addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('modal').classList.add('show');
+});
+window.closeModal = function() {
+  document.getElementById('modal').classList.remove('show');
+  document.getElementById('booking-form').reset();
+};
+
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+setTimeout(function() {
+  const canvas = document.getElementById('car-canvas');
+  if (!canvas) return;
+
+  const isMob = window.innerWidth <= 900;
+  const W = isMob ? window.innerWidth : (canvas.offsetWidth || 560);
+  const H = isMob ? 380 : (canvas.offsetHeight || 420);
+  canvas.width = W; canvas.height = H;
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: !isMob, powerPreference: 'high-performance' });
+  } catch(e) { return; }
+
+  renderer.setSize(W, H, false);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMob ? 1.5 : 2));
+  renderer.setClearColor(0x070d18, 1);
+  renderer.shadowMap.enabled = !isMob;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = isMob ? 1.4 : 1.8;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+
+  // Studio environment map — gives metallic surfaces real reflections
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environment = envTexture;
+  scene.background = new THREE.Color(0x070d18);
+  pmrem.dispose();
+  const camera = new THREE.PerspectiveCamera(isMob ? 60 : 45, W / H, 0.1, 100);
+  camera.position.set(isMob ? 2.2 : 4.5, isMob ? 1.2 : 1.8, isMob ? 3.0 : 5.5);
+  camera.lookAt(0, 0.3, 0);
+
+  // Lighting — cinematic setup
+  scene.add(new THREE.AmbientLight(0xc8d8ff, 2.5));
+  const sun = new THREE.DirectionalLight(0xfff8e7, 5.0);
+  sun.position.set(4, 6, 5);
+  sun.castShadow = !isMob;
+  if (!isMob) { sun.shadow.mapSize.set(1024, 1024); sun.shadow.camera.near = 0.5; sun.shadow.camera.far = 30; }
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xadd8ff, 2.5);
+  fill.position.set(-5, 4, -3); scene.add(fill);
+  const rimL = new THREE.PointLight(0x2f81f7, 6.0, 10);
+  rimL.position.set(-3, 3, -2); scene.add(rimL);
+  const topL = new THREE.PointLight(0xffffff, 4.0, 12);
+  topL.position.set(0, 5, 2); scene.add(topL);
+  const frontL = new THREE.DirectionalLight(0xffffff, 3.0);
+  frontL.position.set(0, 2, 8); scene.add(frontL);
+
+  // Ground
+  const grid = new THREE.GridHelper(14, 20, 0x2f81f7, 0x1a2540);
+  grid.material.transparent = true; grid.material.opacity = 0.25;
+  grid.position.y = -0.01; scene.add(grid);
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0x050a12, metalness: 0.6, roughness: 0.4 });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 16), floorMat);
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+  // Scan rings
+  const rings = [];
+  [2.5, 3.5, 4.5].forEach((r, i) => {
+    const colors = [0x2f81f7, 0x7ee8fa, 0xa371f7];
+    const rm = new THREE.MeshBasicMaterial({ color: colors[i], transparent: true, opacity: 0.5 });
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.015, 6, 80), rm);
+    ring.rotation.x = Math.PI / 2; ring.position.y = 0.02;
+    scene.add(ring); rings.push({ mesh: ring, offset: i * 1.2 });
+  });
+
+  // Particles (fewer on mobile)
+  const partCount = isMob ? 80 : 200;
+  const ppos = new Float32Array(partCount * 3);
+  for (let i = 0; i < partCount; i++) {
+    const theta = Math.random() * Math.PI * 2, phi = Math.acos(2 * Math.random() - 1);
+    const r = 2.5 + Math.random() * 3;
+    ppos[i*3] = r*Math.sin(phi)*Math.cos(theta);
+    ppos[i*3+1] = r*Math.sin(phi)*Math.sin(theta)*0.4;
+    ppos[i*3+2] = r*Math.cos(phi);
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(ppos, 3));
+  const pMat = new THREE.PointsMaterial({ color: 0x2f81f7, size: isMob ? 0.06 : 0.08, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
+  scene.add(new THREE.Points(pGeo, pMat));
+
+  // Orbit lights
+  const orb1 = new THREE.PointLight(0x2f81f7, 3.0, 8); scene.add(orb1);
+  const orb2 = new THREE.PointLight(0xa371f7, 2.0, 6); scene.add(orb2);
+
+  // Drag to rotate
+  let isDragging = false, lastX = 0, dragVel = 0, rotY = 0;
+  canvas.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; dragVel = 0; });
+  window.addEventListener('mousemove', e => { if (!isDragging) return; dragVel = e.clientX - lastX; rotY += dragVel * 0.01; lastX = e.clientX; });
+  window.addEventListener('mouseup', () => { isDragging = false; });
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); isDragging = true; lastX = e.touches[0].clientX; dragVel = 0; }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!isDragging) return; dragVel = e.touches[0].clientX - lastX; rotY += dragVel * 0.01; lastX = e.touches[0].clientX; }, { passive: false });
+  canvas.addEventListener('touchend', () => { isDragging = false; });
+
+  // Load GLTF car
+  let carGroup = null;
+  let bodyMeshes = [];
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dracoLoader);
+
+  // ── BEST REALISTIC COMBO: Phantom Black + Chrome + Red Calipers ──
+  // Black metallic catches blue/purple env reflections = exactly like real luxury cars
+  const paintMat = new THREE.MeshStandardMaterial({
+    color: 0x0A0B10,          // phantom black
+    metalness: 0.95,
+    roughness: 0.03,
+    envMapIntensity: 4.0,
+    emissive: new THREE.Color(0x0a0f1f),
+    emissiveIntensity: 0.15
+  });
+  const rimMat = new THREE.MeshStandardMaterial({
+    color: 0xE8ECF4,          // polished chrome
+    metalness: 1.0,
+    roughness: 0.0,
+    envMapIntensity: 5.0
+  });
+  const calMat = new THREE.MeshStandardMaterial({
+    color: 0xCC1100,          // red brake calipers
+    metalness: 0.5,
+    roughness: 0.3,
+    envMapIntensity: 1.5
+  });
+  const glassMat2 = new THREE.MeshStandardMaterial({
+    color: 0x334455,          // dark tinted privacy glass
+    metalness: 0.15,
+    roughness: 0.0,
+    transparent: true,
+    opacity: 0.28,
+    envMapIntensity: 3.0
+  });
+  const tyreMat = new THREE.MeshStandardMaterial({ color: 0x0D0D0D, metalness: 0.0, roughness: 0.98 });
+  const interiorMat = new THREE.MeshStandardMaterial({ color: 0x1C1C1E, metalness: 0.3, roughness: 0.6 });
+
+  loader.load(
+    './ferrari.glb',
+    function(gltf) {
+      carGroup = gltf.scene;
+      const scale = isMob ? 1.1 : 1.3;
+      carGroup.scale.set(scale, scale, scale);
+      carGroup.position.set(0, 0, 0);
+      carGroup.rotation.y = Math.PI / 6;
+
+      carGroup.traverse(child => {
+        if (child.isMesh) {
+          child.castShadow = !isMob;
+          child.receiveShadow = !isMob;
+          const name = (child.name || '').toLowerCase();
+
+          const isGlass    = name.includes('glass') || name.includes('window') || name.includes('windshield');
+          const isTyre     = name.includes('tyre') || name.includes('tire') || name.includes('rubber');
+          const isCaliper  = name.includes('caliper') || name.includes('brake');
+          const isRim      = name.includes('rim') || name.includes('wheel') || name.includes('disc');
+          const isInterior = name.includes('interior') || name.includes('seat') || name.includes('dash') || name.includes('steering');
+
+          if      (isGlass)    { child.material = glassMat2; }
+          else if (isTyre)     { child.material = tyreMat; }
+          else if (isCaliper)  { child.material = calMat; }
+          else if (isRim)      { child.material = rimMat; }
+          else if (isInterior) { child.material = interiorMat; }
+          else                 { child.material = paintMat; bodyMeshes.push(child); }
+        }
+      });
+
+      scene.add(carGroup);
+    },
+    undefined,
+    function(error) {
+      // Fallback: simple pearl white car if GLTF fails
+      carGroup = new THREE.Group();
+      const bm = new THREE.MeshStandardMaterial({ color: 0xEFF3FA, metalness: 0.5, roughness: 0.12, emissive: new THREE.Color(0xaabbcc), emissiveIntensity: 0.1 });
+      const cm = new THREE.MeshStandardMaterial({ color: 0xCDD5E4, metalness: 0.45, roughness: 0.15 });
+      const body = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.6, 1.9), bm); body.position.y = 0.5; carGroup.add(body);
+      const cabin = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.55, 1.75), cm); cabin.position.set(-0.1, 1.0, 0); carGroup.add(cabin);
+      const bonnet = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.25, 1.9), bm); bonnet.position.set(1.5, 0.78, 0); bonnet.rotation.z = -0.2; carGroup.add(bonnet);
+      const boot = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.2, 1.9), bm); boot.position.set(-1.6, 0.75, 0); boot.rotation.z = 0.18; carGroup.add(boot);
+      [[1.4,1.0],[1.4,-1.0],[-1.4,1.0],[-1.4,-1.0]].forEach(([x,z]) => {
+        const w = new THREE.Group(); w.position.set(x,0.35,z); w.rotation.z = Math.PI/2;
+        w.add(new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.42,0.28,28), new THREE.MeshStandardMaterial({color:0x111111,roughness:0.9})));
+        w.add(new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.26,0.30,20), new THREE.MeshStandardMaterial({color:0xbbccdd,metalness:0.95,roughness:0.05})));
+        carGroup.add(w);
+      });
+      carGroup.scale.set(1.2,1.2,1.2);
+      scene.add(carGroup);
+      bodyMeshes = [];
+    }
+  );
+
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate); t += 0.016;
+
+    if (carGroup) {
+      if (!isDragging) { dragVel *= 0.95; rotY += dragVel * 0.01; if (Math.abs(dragVel) < 0.01) rotY += 0.006; }
+      carGroup.rotation.y = rotY;
+      carGroup.position.y = Math.sin(t * 0.8) * 0.05;
+      // Rosso Corsa subtle shimmer — stays red, pulses depth
+      paintMat.emissiveIntensity = 0.1 + 0.08 * Math.sin(t * 1.5);
+    }
+
+    rings.forEach((r, i) => {
+      r.mesh.rotation.z += 0.004 * (i % 2 === 0 ? 1 : -1);
+      r.mesh.material.opacity = 0.3 + 0.25 * Math.sin(t * 1.5 + r.offset);
+    });
+
+    orb1.position.set(Math.cos(t*0.8)*4.5, 1.5+Math.sin(t*0.6), Math.sin(t*0.8)*4.5);
+    orb2.position.set(Math.cos(t*0.6+2)*3.5, 1.2+Math.sin(t*0.9), Math.sin(t*0.6+2)*3.5);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const w2 = isMob ? window.innerWidth : (canvas.offsetWidth || 560);
+    const h2 = isMob ? 380 : (canvas.offsetHeight || 420);
+    renderer.setSize(w2, h2, false); camera.aspect = w2/h2; camera.updateProjectionMatrix();
+  });
+}, 300);
+</script>
+</body>
+</html>
