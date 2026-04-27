@@ -581,9 +581,128 @@
     }
     .trust-badge .tb-icon { font-size: 0.95rem; }
     .trust-badge strong { color: var(--text-primary); }
+
+    /* ── SCROLL PROGRESS BAR ─────────────────────────────── */
+    #scroll-bar {
+      position: fixed; top: 0; left: 0; height: 2px;
+      background: linear-gradient(90deg, #2F81F7, #7ee8fa, #2F81F7);
+      z-index: 10001; width: 0%; transition: width 0.1s linear;
+      box-shadow: 0 0 8px rgba(47,129,247,0.8);
+    }
+
+    /* ── CURSOR NEON STREAK ──────────────────────────────── */
+    #cursor-glow {
+      position: fixed; pointer-events: none; z-index: 9998;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47,129,247,0.06) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease-out, opacity 0.3s;
+      opacity: 0;
+    }
+    @media (max-width: 768px) { #cursor-glow { display: none; } }
+
+    /* ── WATER RAIN CANVAS ───────────────────────────────── */
+    #rain-canvas {
+      position: fixed; inset: 0; z-index: 1;
+      pointer-events: none; opacity: 0.35;
+    }
+
+    /* ── CAR COLOR SWITCHER ──────────────────────────────── */
+    .color-picker {
+      position: absolute;
+      bottom: 1rem; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 0.5rem;
+      z-index: 5; background: rgba(13,17,23,0.75);
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: 0.4rem 0.85rem; backdrop-filter: blur(8px);
+    }
+    @media (max-width: 900px) { .color-picker { bottom: 0.5rem; } }
+    .cp-label {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-muted); margin-right: 0.25rem;
+    }
+    .cp-swatch {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid transparent; cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .cp-swatch:hover { transform: scale(1.2); }
+    .cp-swatch.active { border-color: #fff; transform: scale(1.15); }
+
+    /* ── URGENCY BADGE ───────────────────────────────────── */
+    .urgency-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(210,153,34,0.12); border: 1px solid rgba(210,153,34,0.35);
+      border-radius: 100px; padding: 0.3rem 0.85rem;
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.08em; color: var(--accent-amber);
+      margin-bottom: 1rem; animation: urg-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes urg-pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(210,153,34,0.3); }
+      50% { box-shadow: 0 0 0 6px rgba(210,153,34,0); }
+    }
+    .urgency-badge .urg-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-amber); animation: pulse 1.5s infinite;
+    }
+
+    /* ── SERVICE ESTIMATOR ───────────────────────────────── */
+    .estimator {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem; margin-top: 2rem;
+    }
+    .estimator-title {
+      font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent-blue); margin-bottom: 1.25rem;
+    }
+    .estimator-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .estimator-select {
+      flex: 1; min-width: 140px;
+      background: var(--bg-primary); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-primary);
+      font-family: var(--font-family); font-size: 0.875rem;
+      padding: 0.6rem 0.85rem; outline: none; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .estimator-select:focus { border-color: var(--accent-blue); }
+    .estimator-result {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: rgba(47,129,247,0.06); border: 1px solid rgba(47,129,247,0.2);
+      border-radius: var(--radius-md);
+    }
+    .est-price {
+      font-family: var(--font-mono); font-size: 2rem; font-weight: 700;
+      color: var(--accent-blue); transition: all 0.3s;
+    }
+    .est-detail { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
+    .est-detail strong { color: var(--text-primary); }
+
+    /* ── ANIMATED COUNTERS ───────────────────────────────── */
+    .fact-num[data-target] { transition: color 0.3s; }
+
+    /* ── PARTICLE SPLASH ─────────────────────────────────── */
+    .splash-particle {
+      position: fixed; pointer-events: none; z-index: 9997;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--accent-blue);
+      animation: splash-out 0.8s ease-out forwards;
+    }
+    @keyframes splash-out {
+      0% { transform: translate(0,0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+    }
   </style>
 </head>
 <body>
+<div id="scroll-bar"></div>
+<div id="cursor-glow"></div>
+<canvas id="rain-canvas"></canvas>
 <canvas id="hero-bg"></canvas>
 <div class="fx-grain"></div>
 <div class="fx-spotlight" id="spotlight"></div>
@@ -606,6 +725,7 @@
   <div class="hero-orb orb3"></div>
   <div class="hero-content">
     <div class="parallax-slow">
+      <div class="urgency-badge"><span class="urg-dot"></span> <span id="urgency-text">⚡ 4 slots left this week in South Yarra</span></div>
       <div class="hero-status">
         <span class="dot"></span>
         DETAILERS AVAILABLE · MELBOURNE, AU
@@ -634,6 +754,14 @@
     </div>
   </div>
   <canvas id="car-canvas"></canvas>
+  <div class="color-picker">
+    <span class="cp-label">Paint</span>
+    <button class="cp-swatch active" style="background:#0A0B10;border-color:rgba(255,255,255,0.4)" title="Phantom Black" onclick="setCarColor('phantom',this)"></button>
+    <button class="cp-swatch" style="background:#EFF3FA" title="Pearl White" onclick="setCarColor('white',this)"></button>
+    <button class="cp-swatch" style="background:#CC1100" title="Racing Red" onclick="setCarColor('red',this)"></button>
+    <button class="cp-swatch" style="background:#1A3A8F" title="Royal Blue" onclick="setCarColor('blue',this)"></button>
+    <button class="cp-swatch" style="background:#4A1A7A" title="Midnight Purple" onclick="setCarColor('purple',this)"></button>
+  </div>
   <div class="car-hint">DRAG TO ROTATE</div>
 </section>
 
@@ -730,10 +858,10 @@
     <h2 class="section-title">By The Numbers</h2>
   </div>
   <div class="facts-grid">
-    <div class="fact-card reveal reveal-3d"><div class="fact-num">1,800+</div><div class="fact-label">Cars Detailed</div></div>
-    <div class="fact-card reveal reveal-3d"><div class="fact-num">28</div><div class="fact-label">Melbourne Suburbs</div></div>
-    <div class="fact-card reveal reveal-3d"><div class="fact-num">98%</div><div class="fact-label">Satisfaction Rate</div></div>
-    <div class="fact-card reveal reveal-3d"><div class="fact-num">4.9★</div><div class="fact-label">Average Rating</div></div>
+    <div class="fact-card reveal reveal-3d"><div class="fact-num" data-target="1800" data-suffix="+">0</div><div class="fact-label">Cars Detailed</div></div>
+    <div class="fact-card reveal reveal-3d"><div class="fact-num" data-target="28" data-suffix="">0</div><div class="fact-label">Melbourne Suburbs</div></div>
+    <div class="fact-card reveal reveal-3d"><div class="fact-num" data-target="98" data-suffix="%">0</div><div class="fact-label">Satisfaction Rate</div></div>
+    <div class="fact-card reveal reveal-3d"><div class="fact-num" data-target="4.9" data-suffix="★">0</div><div class="fact-label">Average Rating</div></div>
   </div>
 </section>
 
@@ -885,6 +1013,39 @@
         <li><span class="check">✓</span> 2-year protection warranty</li>
       </ul>
       <a href="#booking" class="btn btn-secondary" style="width:100%; justify-content:center;">Get Ceramic Quote</a>
+    </div>
+  </div>
+
+  <!-- Live Price Estimator -->
+  <div class="estimator reveal">
+    <div class="estimator-title">[ INSTANT QUOTE ] — Price Estimator</div>
+    <div class="estimator-row">
+      <select class="estimator-select" id="est-service" onchange="calcEstimate()">
+        <option value="">Select Service...</option>
+        <option value="express">Express Wash</option>
+        <option value="full">Full Detail</option>
+        <option value="ceramic">Ceramic Coating</option>
+      </select>
+      <select class="estimator-select" id="est-size" onchange="calcEstimate()">
+        <option value="">Vehicle Size...</option>
+        <option value="small">Small (Hatch / Sedan)</option>
+        <option value="medium">Medium (SUV / Wagon)</option>
+        <option value="large">Large (4WD / Van / Ute)</option>
+      </select>
+      <select class="estimator-select" id="est-zone" onchange="calcEstimate()">
+        <option value="">Your Zone...</option>
+        <option value="1">Zone 1 — Inner (Free travel)</option>
+        <option value="2">Zone 2 — Middle (+$20)</option>
+        <option value="3">Zone 3 — Outer (+$35)</option>
+      </select>
+    </div>
+    <div class="estimator-result" id="est-result" style="display:none">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;margin-bottom:0.25rem">Estimated Price</div>
+        <div class="est-price" id="est-price">$0</div>
+      </div>
+      <div class="est-detail" id="est-detail"></div>
+      <a href="#booking" class="btn btn-primary">→ Book This</a>
     </div>
   </div>
 </section>
@@ -1409,6 +1570,165 @@ const services = ['Express Wash','Full Detail','Ceramic Coating','Paint Correcti
 const mi = document.getElementById('marquee-inner');
 mi.innerHTML = [...services,...services].map(s => '<span class="marquee-item"><span class="sep">✦</span>' + s + '</span>').join('');
 
+/* ── SCROLL PROGRESS BAR ─────────────────────────────── */
+const scrollBar = document.getElementById('scroll-bar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  scrollBar.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+/* ── CURSOR NEON GLOW ────────────────────────────────── */
+const cursorGlow = document.getElementById('cursor-glow');
+document.addEventListener('mousemove', e => {
+  cursorGlow.style.opacity = '1';
+  cursorGlow.style.transform = `translate(${e.clientX - 150}px, ${e.clientY - 150}px)`;
+});
+document.addEventListener('mouseleave', () => { cursorGlow.style.opacity = '0'; });
+
+/* ── PARTICLE SPLASH ON CLICK ────────────────────────── */
+document.addEventListener('click', e => {
+  if (navigator.vibrate) navigator.vibrate(12);
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'splash-particle';
+    const angle = (i / 8) * Math.PI * 2;
+    const dist = 40 + Math.random() * 40;
+    p.style.left = e.clientX + 'px';
+    p.style.top = e.clientY + 'px';
+    p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+    p.style.background = Math.random() > 0.5 ? '#2F81F7' : '#7ee8fa';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 800);
+  }
+});
+
+/* ── WATER RAIN ──────────────────────────────────────── */
+(function() {
+  const rc = document.getElementById('rain-canvas');
+  const ctx = rc.getContext('2d');
+  let W, H, drops = [];
+  function resize() { W = rc.width = window.innerWidth; H = rc.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  for (let i = 0; i < 60; i++) drops.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    len: 8 + Math.random() * 14,
+    speed: 1.5 + Math.random() * 2.5,
+    opacity: 0.04 + Math.random() * 0.08
+  });
+  function drawRain() {
+    ctx.clearRect(0, 0, W, H);
+    drops.forEach(d => {
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x - 1, d.y + d.len);
+      ctx.strokeStyle = `rgba(47,129,247,${d.opacity})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      d.y += d.speed;
+      if (d.y > H) { d.y = -d.len; d.x = Math.random() * W; }
+    });
+    requestAnimationFrame(drawRain);
+  }
+  drawRain();
+})();
+
+/* ── ANIMATED STAT COUNTERS ──────────────────────────── */
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const isDecimal = target % 1 !== 0;
+    const duration = 1800;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = target * eased;
+      el.textContent = (isDecimal ? val.toFixed(1) : Math.round(val).toLocaleString()) + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    counterObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.fact-num[data-target]').forEach(el => counterObs.observe(el));
+
+/* ── URGENCY BADGE ROTATION ──────────────────────────── */
+const urgencyMessages = [
+  '⚡ 4 slots left this week in South Yarra',
+  '🔥 3 bookings today in Toorak',
+  '⚡ 5 slots left this week in Richmond',
+  '🔥 2 slots remaining in St Kilda',
+  '⚡ Fully booked last Sunday — book early',
+];
+let urgIdx = 0;
+const urgEl = document.getElementById('urgency-text');
+setInterval(() => {
+  urgIdx = (urgIdx + 1) % urgencyMessages.length;
+  urgEl.style.opacity = '0';
+  setTimeout(() => { urgEl.textContent = urgencyMessages[urgIdx]; urgEl.style.opacity = '1'; }, 300);
+}, 4000);
+urgEl.style.transition = 'opacity 0.3s';
+
+/* ── SERVICE PRICE ESTIMATOR ─────────────────────────── */
+const prices = {
+  express: { small: 119, medium: 149, large: 179, label: 'Express Wash · 1–2 hrs' },
+  full:    { small: 299, medium: 349, large: 449, label: 'Full Detail · 2–4 hrs' },
+  ceramic: { small: 999, medium: 1299, large: 1599, label: 'Ceramic Coat · 4–8 hrs' },
+};
+const travel = { '1': 0, '2': 20, '3': 35 };
+/* ── CAR COLOR SWITCHER ──────────────────────────────── */
+const carColors = {
+  phantom: { color: 0x0A0B10, metalness: 0.95, roughness: 0.03, emissive: 0x0a0f1f, emissiveIntensity: 0.15 },
+  white:   { color: 0xEFF3FA, metalness: 0.55, roughness: 0.10, emissive: 0x1a2a40, emissiveIntensity: 0.08 },
+  red:     { color: 0xAA0A0A, metalness: 0.80, roughness: 0.08, emissive: 0x330000, emissiveIntensity: 0.20 },
+  blue:    { color: 0x0D2A6E, metalness: 0.85, roughness: 0.06, emissive: 0x050f2a, emissiveIntensity: 0.18 },
+  purple:  { color: 0x2E0B5E, metalness: 0.90, roughness: 0.05, emissive: 0x120028, emissiveIntensity: 0.20 },
+};
+window.setCarColor = function(name, btn) {
+  document.querySelectorAll('.cp-swatch').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (!window._paintMat) return;
+  const c = carColors[name];
+  window._paintMat.color.setHex(c.color);
+  window._paintMat.metalness = c.metalness;
+  window._paintMat.roughness = c.roughness;
+  window._paintMat.emissive.setHex(c.emissive);
+  window._paintMat.emissiveIntensity = c.emissiveIntensity;
+  window._paintMat.needsUpdate = true;
+};
+
+window.calcEstimate = function() {
+  const svc = document.getElementById('est-service').value;
+  const sz  = document.getElementById('est-size').value;
+  const zone = document.getElementById('est-zone').value;
+  const result = document.getElementById('est-result');
+  if (!svc || !sz || !zone) { result.style.display = 'none'; return; }
+  const base = prices[svc][sz];
+  const fee = travel[zone];
+  const total = base + fee;
+  document.getElementById('est-price').textContent = '$' + total.toLocaleString();
+  document.getElementById('est-detail').innerHTML =
+    `<strong>${prices[svc].label}</strong><br>Base: $${base}${fee ? ` + $${fee} travel fee` : ' · No travel fee'}`;
+  result.style.display = 'flex';
+};
+
+/* ── PULL-TO-REFRESH CAR SPIN ────────────────────────── */
+let pullStart = 0;
+document.addEventListener('touchstart', e => { pullStart = e.touches[0].clientY; }, { passive: true });
+document.addEventListener('touchmove', e => {
+  if (window.scrollY > 0 || !window._carGroup) return;
+  const pull = e.touches[0].clientY - pullStart;
+  if (pull > 0 && window._carGroup) {
+    window._carGroup.rotation.y += pull * 0.002;
+  }
+}, { passive: true });
+
 window.toggleFaq = function(el) {
   const item = el.parentElement;
   const wasOpen = item.classList.contains('open');
@@ -1617,6 +1937,8 @@ setTimeout(function() {
       });
 
       scene.add(carGroup);
+      window._carGroup = carGroup;
+      window._paintMat = paintMat;
     },
     undefined,
     function(error) {
