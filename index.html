@@ -413,6 +413,24 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
+      overflow: hidden;
+    }
+    #hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+      display: block;
+    }
+    #hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(13,17,23,0.62) 0%,
+        rgba(13,17,23,0.40) 45%,
+        rgba(13,17,23,0.72) 100%
+      );
     }
     /* ── HERO PARALLAX LAYERS ────────────────────────────── */
     .hero-content {
@@ -703,7 +721,13 @@
 <div id="scroll-bar"></div>
 <div id="cursor-glow"></div>
 <canvas id="rain-canvas"></canvas>
-<canvas id="hero-bg"></canvas>
+<div id="hero-bg">
+  <video id="hero-video" autoplay muted loop playsinline preload="auto">
+    <source src="https://videos.pexels.com/video-files/3571264/3571264-hd_1920_1080_30fps.mp4" type="video/mp4">
+    <source src="https://videos.pexels.com/video-files/2278095/2278095-hd_1920_1080_30fps.mp4" type="video/mp4">
+  </video>
+  <div id="hero-video-overlay"></div>
+</div>
 <div class="fx-grain"></div>
 <div class="fx-spotlight" id="spotlight"></div>
 
@@ -1309,239 +1333,21 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-/* ── HERO BG SCENE — Night Highway ───────────────────── */
+/* ── HERO BG SCENE — Video ───────────────────────────── */
 (function() {
-  const canvas = document.getElementById('hero-bg');
-  if (!canvas) return;
+  // Subtle parallax on the video itself via transform
+  const video = document.getElementById('hero-video');
+  if (!video) return;
 
-  const ctx = canvas.getContext('2d');
-  let W = canvas.width  = window.innerWidth;
-  let H = canvas.height = window.innerHeight;
+  // Ensure autoplay works (some browsers need a user gesture fallback)
+  video.play().catch(() => {});
 
-  window.addEventListener('resize', () => {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    initRoad();
-  });
+  window._setBgCam = (mx, my) => {
+    if (!video) return;
+    const tx = mx * 18, ty = my * 12;
+    video.style.transform = `scale(1.08) translate(${tx}px,${ty}px)`;
+  };
 
-  // ── Vanishing point (center-ish, slightly above mid) ──
-  const VP = { x: 0.5, y: 0.42 }; // fraction of W/H
-
-  // ── Road lane markings ─────────────────────────────────
-  let lanes = [];
-  function initRoad() {
-    lanes = [];
-    const numLanes = 5;
-    for (let l = 0; l < numLanes; l++) {
-      // spread from center
-      const spread = (l - (numLanes - 1) / 2) * 0.14;
-      for (let s = 0; s < 8; s++) {
-        lanes.push({ lane: l, spread, seg: s, progress: s / 8 });
-      }
-    }
-  }
-  initRoad();
-
-  // ── Bokeh lights (headlights + taillights) ─────────────
-  const LIGHT_COUNT = 90;
-  const lights = [];
-  function makeLight(i) {
-    // Upper half = oncoming headlights (white/blue, moving right→left across vanishing)
-    // Lower half = taillights ahead of us (red/amber, streaking away to VP)
-    const side = Math.random() > 0.5 ? 1 : -1;
-    const isHead = Math.random() > 0.45;
-    return {
-      // start position in screen-fraction coords
-      x: Math.random(),
-      y: 0.1 + Math.random() * 0.85,
-      r: 1.5 + Math.random() * 9,
-      alpha: 0.25 + Math.random() * 0.65,
-      // color: headlights = cool white/blue, taillights = red/amber
-      hue: isHead ? (Math.random() > 0.5 ? 210 : 40) : (Math.random() > 0.6 ? 0 : 25),
-      sat: isHead ? (Math.random() > 0.5 ? 60 : 10) : 90,
-      bright: isHead ? 95 : 60,
-      // movement
-      vx: side * (0.0002 + Math.random() * 0.0006),
-      vy: (Math.random() - 0.5) * 0.00015,
-      streak: isHead ? (0.004 + Math.random() * 0.018) : 0,
-      pulse: Math.random() * Math.PI * 2,
-      pulseSpeed: 0.02 + Math.random() * 0.04,
-    };
-  }
-  for (let i = 0; i < LIGHT_COUNT; i++) lights.push(makeLight(i));
-
-  // ── Speed streaks (horizontal blur lines) ──────────────
-  const STREAK_COUNT = 22;
-  const streaks = [];
-  for (let i = 0; i < STREAK_COUNT; i++) {
-    streaks.push({
-      x: Math.random(),
-      y: 0.15 + Math.random() * 0.7,
-      len: 0.04 + Math.random() * 0.12,
-      speed: 0.003 + Math.random() * 0.008,
-      alpha: 0.04 + Math.random() * 0.10,
-      hue: Math.random() > 0.6 ? 0 : 210,
-    });
-  }
-
-  // ── Water-bead droplets on paint ───────────────────────
-  const DROPS = 55;
-  const drops = [];
-  for (let i = 0; i < DROPS; i++) {
-    drops.push({
-      x: Math.random() * 1,
-      y: Math.random() * 1,
-      r: 3 + Math.random() * 22,
-      alpha: 0.06 + Math.random() * 0.13,
-      vy: 0.00008 + Math.random() * 0.00018,
-    });
-  }
-
-  let mouseX = 0.5, mouseY = 0.5;
-  window._setBgCam = (mx, my) => { mouseX = 0.5 + mx * 0.08; mouseY = 0.5 + my * 0.06; };
-
-  let t = 0;
-  function draw() {
-    requestAnimationFrame(draw);
-    t += 0.016;
-
-    const vpx = VP.x * W + (mouseX - 0.5) * 60;
-    const vpy = VP.y * H + (mouseY - 0.5) * 40;
-
-    // ── Clear with trail ──
-    ctx.fillStyle = 'rgba(13,17,23,0.18)';
-    ctx.fillRect(0, 0, W, H);
-
-    // ── Ambient road glow (ground) ─────────────────────
-    const roadGrad = ctx.createRadialGradient(vpx, vpy, 0, vpx, H * 0.9, W * 0.7);
-    roadGrad.addColorStop(0,   'rgba(47,129,247,0.04)');
-    roadGrad.addColorStop(0.5, 'rgba(20,60,120,0.03)');
-    roadGrad.addColorStop(1,   'rgba(0,0,0,0)');
-    ctx.fillStyle = roadGrad;
-    ctx.fillRect(0, 0, W, H);
-
-    // ── Road lane markings ─────────────────────────────
-    ctx.save();
-    ctx.strokeStyle = 'rgba(47,129,247,0.12)';
-    ctx.lineWidth = 1;
-    for (const seg of lanes) {
-      const p  = ((seg.progress + t * 0.18) % 1);
-      const p2 = Math.min(p + 0.055, 1);
-
-      // perspective projection from VP
-      const horizonFrac = 0.42;
-      const groundFrac  = 1.05;
-      const lx = seg.spread;
-
-      function project(frac, laneOffset) {
-        const fy = horizonFrac + (groundFrac - horizonFrac) * frac;
-        const fx = 0.5 + laneOffset * frac * 1.8;
-        return { x: fx * W, y: fy * H };
-      }
-
-      const a = project(p,  lx);
-      const b = project(p2, lx);
-      ctx.globalAlpha = p * 0.55;
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.stroke();
-    }
-    ctx.restore();
-
-    // ── Speed streaks ──────────────────────────────────
-    ctx.save();
-    for (const s of streaks) {
-      s.x -= s.speed;
-      if (s.x + s.len < 0) { s.x = 1 + s.len; s.y = 0.15 + Math.random() * 0.7; }
-      const sx = s.x * W, sy = s.y * H, ex = (s.x + s.len) * W;
-      const g = ctx.createLinearGradient(sx, sy, ex, sy);
-      g.addColorStop(0,   `hsla(${s.hue},80%,70%,0)`);
-      g.addColorStop(0.4, `hsla(${s.hue},80%,70%,${s.alpha})`);
-      g.addColorStop(1,   `hsla(${s.hue},80%,70%,0)`);
-      ctx.strokeStyle = g;
-      ctx.lineWidth = 0.8;
-      ctx.globalAlpha = 1;
-      ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(ex, sy);
-      ctx.stroke();
-    }
-    ctx.restore();
-
-    // ── Water beads (paint surface) ───────────────────
-    ctx.save();
-    for (const d of drops) {
-      d.y += d.vy;
-      if (d.y > 1.1) { d.y = -0.05; d.x = Math.random(); }
-      const dx = d.x * W, dy = d.y * H;
-      const g = ctx.createRadialGradient(
-        dx - d.r * 0.25, dy - d.r * 0.3, d.r * 0.05,
-        dx, dy, d.r
-      );
-      g.addColorStop(0,   `rgba(190,220,255,${d.alpha * 1.4})`);
-      g.addColorStop(0.55,`rgba(80,140,220,${d.alpha * 0.5})`);
-      g.addColorStop(1,   `rgba(47,100,180,${d.alpha * 0.9})`);
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(dx, dy, d.r, 0, Math.PI * 2);
-      ctx.fill();
-      // highlight
-      ctx.fillStyle = `rgba(255,255,255,${d.alpha * 0.6})`;
-      ctx.beginPath();
-      ctx.arc(dx - d.r * 0.3, dy - d.r * 0.32, d.r * 0.28, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-
-    // ── Bokeh lights ───────────────────────────────────
-    ctx.save();
-    for (const l of lights) {
-      l.x += l.vx + (mouseX - 0.5) * 0.0004;
-      l.y += l.vy + (mouseY - 0.5) * 0.0003;
-      l.pulse += l.pulseSpeed;
-      if (l.x < -0.05) l.x = 1.05;
-      if (l.x > 1.05)  l.x = -0.05;
-      if (l.y < 0.05)  l.vy =  Math.abs(l.vy);
-      if (l.y > 0.95)  l.vy = -Math.abs(l.vy);
-
-      const lx = l.x * W, ly = l.y * H;
-      const pulseR = l.r * (1 + 0.12 * Math.sin(l.pulse));
-      const a = l.alpha * (0.7 + 0.3 * Math.sin(l.pulse * 0.7));
-
-      // Streak tail
-      if (l.streak > 0) {
-        const sx = lx + l.streak * W * 0.5;
-        const sg = ctx.createLinearGradient(lx, ly, sx, ly);
-        sg.addColorStop(0, `hsla(${l.hue},${l.sat}%,${l.bright}%,${a * 0.6})`);
-        sg.addColorStop(1, `hsla(${l.hue},${l.sat}%,${l.bright}%,0)`);
-        ctx.strokeStyle = sg;
-        ctx.lineWidth = pulseR * 0.4;
-        ctx.beginPath();
-        ctx.moveTo(lx, ly);
-        ctx.lineTo(sx, ly);
-        ctx.stroke();
-      }
-
-      // Glow halo
-      const halo = ctx.createRadialGradient(lx, ly, 0, lx, ly, pulseR * 3.5);
-      halo.addColorStop(0,   `hsla(${l.hue},${l.sat}%,${l.bright}%,${a * 0.9})`);
-      halo.addColorStop(0.35,`hsla(${l.hue},${l.sat}%,${l.bright}%,${a * 0.35})`);
-      halo.addColorStop(1,   `hsla(${l.hue},${l.sat}%,${l.bright}%,0)`);
-      ctx.fillStyle = halo;
-      ctx.beginPath();
-      ctx.arc(lx, ly, pulseR * 3.5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Core dot
-      ctx.fillStyle = `hsla(${l.hue},${l.sat}%,${l.bright}%,${a})`;
-      ctx.beginPath();
-      ctx.arc(lx, ly, pulseR, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-  draw();
 })();
 
 /* ── PARALLAX (mouse + gyro) ─────────────────────────── */
