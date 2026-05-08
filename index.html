@@ -25,9 +25,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script type="importmap">
-{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
-</script>
   <style>
     :root {
       --bg-primary:    #0D1117;
@@ -115,35 +112,7 @@
     .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; }
     .chip { display: flex; align-items: center; gap: 0.45rem; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.28rem 0.65rem; }
     .chip .num { color: var(--accent-blue); }
-    #car-canvas {
-      position: absolute; right: -60px; top: 50%;
-      transform: translateY(-50%);
-      width: 560px; height: 420px; z-index: 3;
-      pointer-events: auto; cursor: grab;
-      background: #070d18;
-      border-radius: 12px;
-    }
-    #car-canvas:active { cursor: grabbing; }
-    .car-hint {
-      position: absolute; right: 20px; bottom: 2rem;
-      font-family: var(--font-mono); font-size: 0.62rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--text-muted); z-index: 4;
-      display: flex; align-items: center; gap: 0.4rem;
-      animation: hint-fade 3s ease-in-out infinite;
-    }
-    .car-hint::before { content: '⟳'; color: var(--accent-blue); }
-    @keyframes hint-fade { 0%,100%{opacity:0.5} 50%{opacity:1} }
-    /* MOBILE: car below text, full width */
     @media (max-width: 900px) {
-      #car-canvas {
-        position: relative; right: auto; top: auto;
-        transform: none; width: 100%; height: 380px;
-        margin-top: 2rem; display: block;
-        background: #070d18;
-        border-radius: 16px;
-      }
-      .car-hint { right: 1rem; bottom: 0.5rem; }
       .hero { min-height: auto; padding-bottom: 2rem; }
     }
     .marquee-track { position: relative; z-index: 2; overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0.75rem 0; background: var(--bg-secondary); }
@@ -414,24 +383,49 @@
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
+      background: #000;
     }
-    #hero-video {
-      width: 100%;
-      height: 100%;
+    #hero-video-wrap {
+      position: absolute;
+      inset: -10%;          /* oversized so no black bars on any ratio */
+      pointer-events: none;
+    }
+    #hero-video-wrap video {
+      width: 100%; height: 100%;
       object-fit: cover;
-      opacity: 0.55;
-      display: block;
+      border: none;
+      opacity: 0.60;
+      filter: saturate(0.85) contrast(1.25) brightness(0.80);
+      transform: scale(1.08);
     }
+    /* dark cinematic overlay — deep vignette + teal-blue grade */
     #hero-video-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        160deg,
-        rgba(13,17,23,0.62) 0%,
-        rgba(13,17,23,0.40) 45%,
-        rgba(13,17,23,0.72) 100%
-      );
+      background:
+        /* center window — let some light breathe through */
+        radial-gradient(ellipse 70% 55% at 55% 52%,
+          rgba(0,0,0,0.10) 0%,
+          rgba(0,0,0,0.55) 60%,
+          rgba(0,0,0,0.88) 100%),
+        /* teal cinematic tint */
+        linear-gradient(180deg,
+          rgba(0,10,20,0.55) 0%,
+          rgba(0,8,18,0.25) 45%,
+          rgba(0,10,20,0.65) 100%);
     }
+    /* cinematic letterbox bars */
+    #hero-bg::before,
+    #hero-bg::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 9vh;
+      background: #000;
+      z-index: 2;
+    }
+    #hero-bg::before { top: 0; }
+    #hero-bg::after  { bottom: 0; }
     /* ── HERO PARALLAX LAYERS ────────────────────────────── */
     .hero-content {
       position: relative; z-index: 2;
@@ -722,10 +716,11 @@
 <div id="cursor-glow"></div>
 <canvas id="rain-canvas"></canvas>
 <div id="hero-bg">
-  <video id="hero-video" autoplay muted loop playsinline preload="auto">
-    <source src="https://videos.pexels.com/video-files/3571264/3571264-hd_1920_1080_30fps.mp4" type="video/mp4">
-    <source src="https://videos.pexels.com/video-files/2278095/2278095-hd_1920_1080_30fps.mp4" type="video/mp4">
-  </video>
+  <div id="hero-video-wrap">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="hero-video.mp4" type="video/mp4">
+    </video>
+  </div>
   <div id="hero-video-overlay"></div>
 </div>
 <div class="fx-grain"></div>
@@ -758,7 +753,7 @@
     </div>
     <div class="parallax-mid">
       <h1 class="hero-display">
-        PREMIUM<br><span class="grad">HOME</span><br>DETAILING
+        3000<br><span class="grad">AUTO</span><br>SPA
       </h1>
     </div>
     <div class="parallax-slow">
@@ -777,16 +772,6 @@
       </div>
     </div>
   </div>
-  <canvas id="car-canvas"></canvas>
-  <div class="color-picker">
-    <span class="cp-label">Paint</span>
-    <button class="cp-swatch active" style="background:#0A0B10;border-color:rgba(255,255,255,0.4)" title="Phantom Black" onclick="setCarColor('phantom',this)"></button>
-    <button class="cp-swatch" style="background:#EFF3FA" title="Pearl White" onclick="setCarColor('white',this)"></button>
-    <button class="cp-swatch" style="background:#CC1100" title="Racing Red" onclick="setCarColor('red',this)"></button>
-    <button class="cp-swatch" style="background:#1A3A8F" title="Royal Blue" onclick="setCarColor('blue',this)"></button>
-    <button class="cp-swatch" style="background:#4A1A7A" title="Midnight Purple" onclick="setCarColor('purple',this)"></button>
-  </div>
-  <div class="car-hint">DRAG TO ROTATE</div>
 </section>
 
 <div class="marquee-track">
@@ -1327,29 +1312,7 @@
   </div>
 </div>
 
-<script type="module">
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-/* ── HERO BG SCENE — Video ───────────────────────────── */
-(function() {
-  // Subtle parallax on the video itself via transform
-  const video = document.getElementById('hero-video');
-  if (!video) return;
-
-  // Ensure autoplay works (some browsers need a user gesture fallback)
-  video.play().catch(() => {});
-
-  window._setBgCam = (mx, my) => {
-    if (!video) return;
-    const tx = mx * 18, ty = my * 12;
-    video.style.transform = `scale(1.08) translate(${tx}px,${ty}px)`;
-  };
-
-})();
-
+<script>
 /* ── PARALLAX (mouse + gyro) ─────────────────────────── */
 let heroMX = 0, heroMY = 0;
 
@@ -1543,26 +1506,6 @@ const prices = {
   ceramic: { small: 999, medium: 1299, large: 1599, label: 'Ceramic Coat · 4–8 hrs' },
 };
 const travel = { '1': 0, '2': 20, '3': 35 };
-/* ── CAR COLOR SWITCHER ──────────────────────────────── */
-const carColors = {
-  phantom: { color: 0x0A0B10, metalness: 0.95, roughness: 0.03, emissive: 0x0a0f1f, emissiveIntensity: 0.15 },
-  white:   { color: 0xEFF3FA, metalness: 0.55, roughness: 0.10, emissive: 0x1a2a40, emissiveIntensity: 0.08 },
-  red:     { color: 0xAA0A0A, metalness: 0.80, roughness: 0.08, emissive: 0x330000, emissiveIntensity: 0.20 },
-  blue:    { color: 0x0D2A6E, metalness: 0.85, roughness: 0.06, emissive: 0x050f2a, emissiveIntensity: 0.18 },
-  purple:  { color: 0x2E0B5E, metalness: 0.90, roughness: 0.05, emissive: 0x120028, emissiveIntensity: 0.20 },
-};
-window.setCarColor = function(name, btn) {
-  document.querySelectorAll('.cp-swatch').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (!window._paintMat) return;
-  const c = carColors[name];
-  window._paintMat.color.setHex(c.color);
-  window._paintMat.metalness = c.metalness;
-  window._paintMat.roughness = c.roughness;
-  window._paintMat.emissive.setHex(c.emissive);
-  window._paintMat.emissiveIntensity = c.emissiveIntensity;
-  window._paintMat.needsUpdate = true;
-};
 
 window.calcEstimate = function() {
   const svc = document.getElementById('est-service').value;
@@ -1579,16 +1522,6 @@ window.calcEstimate = function() {
   result.style.display = 'flex';
 };
 
-/* ── PULL-TO-REFRESH CAR SPIN ────────────────────────── */
-let pullStart = 0;
-document.addEventListener('touchstart', e => { pullStart = e.touches[0].clientY; }, { passive: true });
-document.addEventListener('touchmove', e => {
-  if (window.scrollY > 0 || !window._carGroup) return;
-  const pull = e.touches[0].clientY - pullStart;
-  if (pull > 0 && window._carGroup) {
-    window._carGroup.rotation.y += pull * 0.002;
-  }
-}, { passive: true });
 
 window.toggleFaq = function(el) {
   const item = el.parentElement;
@@ -1627,232 +1560,6 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-setTimeout(function() {
-  const canvas = document.getElementById('car-canvas');
-  if (!canvas) return;
-
-  const isMob = window.innerWidth <= 900;
-  const W = isMob ? window.innerWidth : (canvas.offsetWidth || 560);
-  const H = isMob ? 380 : (canvas.offsetHeight || 420);
-  canvas.width = W; canvas.height = H;
-
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: !isMob, powerPreference: 'high-performance' });
-  } catch(e) { return; }
-
-  renderer.setSize(W, H, false);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMob ? 1.5 : 2));
-  renderer.setClearColor(0x070d18, 1);
-  renderer.shadowMap.enabled = !isMob;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = isMob ? 1.4 : 1.8;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-  const scene = new THREE.Scene();
-
-  // Studio environment map — gives metallic surfaces real reflections
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  pmrem.compileEquirectangularShader();
-  const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environment = envTexture;
-  scene.background = new THREE.Color(0x070d18);
-  pmrem.dispose();
-  const camera = new THREE.PerspectiveCamera(isMob ? 60 : 45, W / H, 0.1, 100);
-  camera.position.set(isMob ? 2.2 : 4.5, isMob ? 1.2 : 1.8, isMob ? 3.0 : 5.5);
-  camera.lookAt(0, 0.3, 0);
-
-  // Lighting — cinematic setup
-  scene.add(new THREE.AmbientLight(0xc8d8ff, 2.5));
-  const sun = new THREE.DirectionalLight(0xfff8e7, 5.0);
-  sun.position.set(4, 6, 5);
-  sun.castShadow = !isMob;
-  if (!isMob) { sun.shadow.mapSize.set(1024, 1024); sun.shadow.camera.near = 0.5; sun.shadow.camera.far = 30; }
-  scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xadd8ff, 2.5);
-  fill.position.set(-5, 4, -3); scene.add(fill);
-  const rimL = new THREE.PointLight(0x2f81f7, 6.0, 10);
-  rimL.position.set(-3, 3, -2); scene.add(rimL);
-  const topL = new THREE.PointLight(0xffffff, 4.0, 12);
-  topL.position.set(0, 5, 2); scene.add(topL);
-  const frontL = new THREE.DirectionalLight(0xffffff, 3.0);
-  frontL.position.set(0, 2, 8); scene.add(frontL);
-
-  // Ground
-  const grid = new THREE.GridHelper(14, 20, 0x2f81f7, 0x1a2540);
-  grid.material.transparent = true; grid.material.opacity = 0.25;
-  grid.position.y = -0.01; scene.add(grid);
-  const floorMat = new THREE.MeshStandardMaterial({ color: 0x050a12, metalness: 0.6, roughness: 0.4 });
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 16), floorMat);
-  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
-
-  // Scan rings
-  const rings = [];
-  [2.5, 3.5, 4.5].forEach((r, i) => {
-    const colors = [0x2f81f7, 0x7ee8fa, 0xa371f7];
-    const rm = new THREE.MeshBasicMaterial({ color: colors[i], transparent: true, opacity: 0.5 });
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.015, 6, 80), rm);
-    ring.rotation.x = Math.PI / 2; ring.position.y = 0.02;
-    scene.add(ring); rings.push({ mesh: ring, offset: i * 1.2 });
-  });
-
-  // Particles (fewer on mobile)
-  const partCount = isMob ? 80 : 200;
-  const ppos = new Float32Array(partCount * 3);
-  for (let i = 0; i < partCount; i++) {
-    const theta = Math.random() * Math.PI * 2, phi = Math.acos(2 * Math.random() - 1);
-    const r = 2.5 + Math.random() * 3;
-    ppos[i*3] = r*Math.sin(phi)*Math.cos(theta);
-    ppos[i*3+1] = r*Math.sin(phi)*Math.sin(theta)*0.4;
-    ppos[i*3+2] = r*Math.cos(phi);
-  }
-  const pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(ppos, 3));
-  const pMat = new THREE.PointsMaterial({ color: 0x2f81f7, size: isMob ? 0.06 : 0.08, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
-  scene.add(new THREE.Points(pGeo, pMat));
-
-  // Orbit lights
-  const orb1 = new THREE.PointLight(0x2f81f7, 3.0, 8); scene.add(orb1);
-  const orb2 = new THREE.PointLight(0xa371f7, 2.0, 6); scene.add(orb2);
-
-  // Drag to rotate
-  let isDragging = false, lastX = 0, dragVel = 0, rotY = 0;
-  canvas.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; dragVel = 0; });
-  window.addEventListener('mousemove', e => { if (!isDragging) return; dragVel = e.clientX - lastX; rotY += dragVel * 0.01; lastX = e.clientX; });
-  window.addEventListener('mouseup', () => { isDragging = false; });
-  canvas.addEventListener('touchstart', e => { e.preventDefault(); isDragging = true; lastX = e.touches[0].clientX; dragVel = 0; }, { passive: false });
-  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!isDragging) return; dragVel = e.touches[0].clientX - lastX; rotY += dragVel * 0.01; lastX = e.touches[0].clientX; }, { passive: false });
-  canvas.addEventListener('touchend', () => { isDragging = false; });
-
-  // Load GLTF car
-  let carGroup = null;
-  let bodyMeshes = [];
-  const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-  const loader = new GLTFLoader();
-  loader.setDRACOLoader(dracoLoader);
-
-  // ── BEST REALISTIC COMBO: Phantom Black + Chrome + Red Calipers ──
-  // Black metallic catches blue/purple env reflections = exactly like real luxury cars
-  const paintMat = new THREE.MeshStandardMaterial({
-    color: 0x0A0B10,          // phantom black
-    metalness: 0.95,
-    roughness: 0.03,
-    envMapIntensity: 4.0,
-    emissive: new THREE.Color(0x0a0f1f),
-    emissiveIntensity: 0.15
-  });
-  const rimMat = new THREE.MeshStandardMaterial({
-    color: 0xE8ECF4,          // polished chrome
-    metalness: 1.0,
-    roughness: 0.0,
-    envMapIntensity: 5.0
-  });
-  const calMat = new THREE.MeshStandardMaterial({
-    color: 0xCC1100,          // red brake calipers
-    metalness: 0.5,
-    roughness: 0.3,
-    envMapIntensity: 1.5
-  });
-  const glassMat2 = new THREE.MeshStandardMaterial({
-    color: 0x334455,          // dark tinted privacy glass
-    metalness: 0.15,
-    roughness: 0.0,
-    transparent: true,
-    opacity: 0.28,
-    envMapIntensity: 3.0
-  });
-  const tyreMat = new THREE.MeshStandardMaterial({ color: 0x0D0D0D, metalness: 0.0, roughness: 0.98 });
-  const interiorMat = new THREE.MeshStandardMaterial({ color: 0x1C1C1E, metalness: 0.3, roughness: 0.6 });
-
-  loader.load(
-    './ferrari.glb',
-    function(gltf) {
-      carGroup = gltf.scene;
-      const scale = isMob ? 1.1 : 1.3;
-      carGroup.scale.set(scale, scale, scale);
-      carGroup.position.set(0, 0, 0);
-      carGroup.rotation.y = Math.PI / 6;
-
-      carGroup.traverse(child => {
-        if (child.isMesh) {
-          child.castShadow = !isMob;
-          child.receiveShadow = !isMob;
-          const name = (child.name || '').toLowerCase();
-
-          const isGlass    = name.includes('glass') || name.includes('window') || name.includes('windshield');
-          const isTyre     = name.includes('tyre') || name.includes('tire') || name.includes('rubber');
-          const isCaliper  = name.includes('caliper') || name.includes('brake');
-          const isRim      = name.includes('rim') || name.includes('wheel') || name.includes('disc');
-          const isInterior = name.includes('interior') || name.includes('seat') || name.includes('dash') || name.includes('steering');
-
-          if      (isGlass)    { child.material = glassMat2; }
-          else if (isTyre)     { child.material = tyreMat; }
-          else if (isCaliper)  { child.material = calMat; }
-          else if (isRim)      { child.material = rimMat; }
-          else if (isInterior) { child.material = interiorMat; }
-          else                 { child.material = paintMat; bodyMeshes.push(child); }
-        }
-      });
-
-      scene.add(carGroup);
-      window._carGroup = carGroup;
-      window._paintMat = paintMat;
-    },
-    undefined,
-    function(error) {
-      // Fallback: simple pearl white car if GLTF fails
-      carGroup = new THREE.Group();
-      const bm = new THREE.MeshStandardMaterial({ color: 0xEFF3FA, metalness: 0.5, roughness: 0.12, emissive: new THREE.Color(0xaabbcc), emissiveIntensity: 0.1 });
-      const cm = new THREE.MeshStandardMaterial({ color: 0xCDD5E4, metalness: 0.45, roughness: 0.15 });
-      const body = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.6, 1.9), bm); body.position.y = 0.5; carGroup.add(body);
-      const cabin = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.55, 1.75), cm); cabin.position.set(-0.1, 1.0, 0); carGroup.add(cabin);
-      const bonnet = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.25, 1.9), bm); bonnet.position.set(1.5, 0.78, 0); bonnet.rotation.z = -0.2; carGroup.add(bonnet);
-      const boot = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.2, 1.9), bm); boot.position.set(-1.6, 0.75, 0); boot.rotation.z = 0.18; carGroup.add(boot);
-      [[1.4,1.0],[1.4,-1.0],[-1.4,1.0],[-1.4,-1.0]].forEach(([x,z]) => {
-        const w = new THREE.Group(); w.position.set(x,0.35,z); w.rotation.z = Math.PI/2;
-        w.add(new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.42,0.28,28), new THREE.MeshStandardMaterial({color:0x111111,roughness:0.9})));
-        w.add(new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.26,0.30,20), new THREE.MeshStandardMaterial({color:0xbbccdd,metalness:0.95,roughness:0.05})));
-        carGroup.add(w);
-      });
-      carGroup.scale.set(1.2,1.2,1.2);
-      scene.add(carGroup);
-      bodyMeshes = [];
-    }
-  );
-
-  let t = 0;
-  function animate() {
-    requestAnimationFrame(animate); t += 0.016;
-
-    if (carGroup) {
-      if (!isDragging) { dragVel *= 0.95; rotY += dragVel * 0.01; if (Math.abs(dragVel) < 0.01) rotY += 0.006; }
-      carGroup.rotation.y = rotY;
-      carGroup.position.y = Math.sin(t * 0.8) * 0.05;
-      // Rosso Corsa subtle shimmer — stays red, pulses depth
-      paintMat.emissiveIntensity = 0.1 + 0.08 * Math.sin(t * 1.5);
-    }
-
-    rings.forEach((r, i) => {
-      r.mesh.rotation.z += 0.004 * (i % 2 === 0 ? 1 : -1);
-      r.mesh.material.opacity = 0.3 + 0.25 * Math.sin(t * 1.5 + r.offset);
-    });
-
-    orb1.position.set(Math.cos(t*0.8)*4.5, 1.5+Math.sin(t*0.6), Math.sin(t*0.8)*4.5);
-    orb2.position.set(Math.cos(t*0.6+2)*3.5, 1.2+Math.sin(t*0.9), Math.sin(t*0.6+2)*3.5);
-
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  window.addEventListener('resize', () => {
-    const w2 = isMob ? window.innerWidth : (canvas.offsetWidth || 560);
-    const h2 = isMob ? 380 : (canvas.offsetHeight || 420);
-    renderer.setSize(w2, h2, false); camera.aspect = w2/h2; camera.updateProjectionMatrix();
-  });
-}, 300);
 </script>
 </body>
 </html>
