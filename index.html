@@ -338,6 +338,20 @@
     .testi-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-blue), #7ee8fa); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: #fff; }
     .testi-name { font-size: 0.85rem; font-weight: 600; }
     .testi-role { font-size: 0.75rem; color: var(--text-muted); }
+    /* About section */
+    .about-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    @media (max-width: 768px) { .about-wrapper { grid-template-columns: 1fr; } }
+    .about-img-wrap { position: relative; }
+    .about-img-wrap img { width: 100%; border-radius: var(--radius-lg); object-fit: cover; filter: brightness(0.9) contrast(1.05); display: block; }
+    .about-img-badge { position: absolute; bottom: -1rem; right: -1rem; background: var(--accent-blue); color: #fff; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; padding: 0.6rem 1rem; border-radius: var(--radius-sm); line-height: 1.4; text-align: center; }
+    .about-content h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .about-content p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem; }
+    .about-highlights { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin: 1.5rem 0; }
+    .about-highlights li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+    .about-highlights li span { color: var(--accent-blue); font-weight: 600; flex-shrink: 0; }
+    .about-contact { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+    .about-contact a { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.83rem; font-family: var(--font-mono); color: var(--text-primary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.45rem 0.9rem; transition: border-color 0.2s, color 0.2s; text-decoration: none; }
+    .about-contact a:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
     .booking-wrapper { display: grid; grid-template-columns: 1fr 1.3fr; gap: 2rem; }
     @media (max-width: 768px) { .booking-wrapper { grid-template-columns: 1fr; } }
     .booking-info h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -735,6 +749,7 @@
 <nav>
   <div class="nav-logo"><img src="logo-new.png" alt="3000 Auto Detailing"></div>
   <ul class="nav-links">
+    <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#areas">Areas</a></li>
@@ -875,6 +890,37 @@
     <div class="fact-card reveal reveal-3d"><div class="fact-num" data-target="28" data-suffix="">0</div><div class="fact-label">Melbourne Suburbs</div></div>
     <div class="fact-card reveal reveal-3d"><div class="fact-num" data-target="98" data-suffix="%">0</div><div class="fact-label">Satisfaction Rate</div></div>
     <div class="fact-card reveal reveal-3d"><div class="fact-num" data-target="4.9" data-suffix="★">0</div><div class="fact-label">Average Rating</div></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-heading reveal">
+    <span class="section-num">[ 04 ]</span>
+    <h2 class="section-title">About Us</h2>
+    <span class="section-sub">Melbourne's trusted mobile detailing specialist.</span>
+  </div>
+  <div class="about-wrapper">
+    <div class="about-img-wrap reveal">
+      <img src="logo-new.png" alt="3000 Auto Detailing — Gene Carlo Gallardo" style="background:#0A0B10;">
+      <div class="about-img-badge">1+ YEAR<br>SERVING MELBOURNE</div>
+    </div>
+    <div class="about-content reveal">
+      <h3>Hi, I'm Gene Carlo Gallardo — founder of 3000 Auto Detailing.</h3>
+      <p>What started as a passion for clean, showroom-quality cars became a full-time mission: bringing professional-grade detailing straight to your driveway. No queues, no drop-offs — just a spotless result delivered at your door.</p>
+      <p>Over the past year, I've detailed hundreds of cars across Melbourne — from everyday sedans to luxury and performance vehicles — always with the same commitment to quality and care.</p>
+      <ul class="about-highlights">
+        <li><span>✔</span> Professional-grade products — safe for all paint types including ceramic & PPF</li>
+        <li><span>✔</span> Fully insured — your vehicle is protected, every time</li>
+        <li><span>✔</span> Eco-conscious — water-efficient methods, biodegradable products available</li>
+        <li><span>✔</span> 100% satisfaction guarantee — not happy? We come back, free</li>
+        <li><span>✔</span> Serving 28+ Melbourne suburbs, 7 days a week</li>
+      </ul>
+      <div class="about-contact">
+        <a href="tel:0420418888">📞 0420 418 888</a>
+        <a href="mailto:info@3000autodetailing.com.au">✉ info@3000autodetailing.com.au</a>
+        <a href="https://wa.me/61420418888" target="_blank" rel="noopener">💬 WhatsApp Us</a>
+      </div>
+    </div>
   </div>
 </section>
 
