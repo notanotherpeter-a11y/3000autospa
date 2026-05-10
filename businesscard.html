@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3000 Auto Detailing — Business Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0d0f;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      padding: 3rem 1rem;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.2em;
+      color: #4B91F7;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .cards-row {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .card-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: #555;
+      text-transform: uppercase;
+    }
+
+    /* Business card: 90mm × 54mm — at 3.78px/mm = ~340×204px, scaled up 2x for screen */
+    .card {
+      width: 680px;
+      height: 408px;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.07),
+        0 30px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(75,145,247,0.08);
+    }
+
+    /* ─── FRONT ─── */
+    .card-front {
+      background: #08090c;
+    }
+
+    /* animated gradient border glow */
+    .card-front::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 20px;
+      background: conic-gradient(from 200deg, #4B91F7, #1a1a2e, #4B91F7 60%, #0ea5e9, #1a1a2e, #4B91F7);
+      z-index: 0;
+      animation: spin 6s linear infinite;
+    }
+    .card-front::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 17px;
+      background: #08090c;
+      z-index: 1;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .front-inner {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem;
+      gap: 1.25rem;
+    }
+
+    .front-logo {
+      width: 260px;
+      height: auto;
+      filter: drop-shadow(0 0 24px rgba(75,145,247,0.5));
+    }
+
+    .front-tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: #4B91F7;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .front-divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #4B91F7, transparent);
+    }
+
+    /* corner accents */
+    .corner {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      z-index: 3;
+    }
+    .corner-tl { top: 14px; left: 14px; border-top: 1.5px solid #4B91F7; border-left: 1.5px solid #4B91F7; border-radius: 4px 0 0 0; }
+    .corner-tr { top: 14px; right: 14px; border-top: 1.5px solid #4B91F7; border-right: 1.5px solid #4B91F7; border-radius: 0 4px 0 0; }
+    .corner-bl { bottom: 14px; left: 14px; border-bottom: 1.5px solid #4B91F7; border-left: 1.5px solid #4B91F7; border-radius: 0 0 0 4px; }
+    .corner-br { bottom: 14px; right: 14px; border-bottom: 1.5px solid #4B91F7; border-right: 1.5px solid #4B91F7; border-radius: 0 0 4px 0; }
+
+    /* watermark */
+    .front-watermark {
+      position: absolute;
+      bottom: -30px;
+      right: -20px;
+      font-size: 9rem;
+      font-weight: 800;
+      color: rgba(75,145,247,0.03);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.05em;
+      z-index: 2;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ─── BACK ─── */
+    .card-back {
+      background: linear-gradient(135deg, #0d1117 0%, #0a0f1a 50%, #080c14 100%);
+    }
+
+    /* subtle dot grid */
+    .card-back::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(75,145,247,0.12) 1px, transparent 1px);
+      background-size: 22px 22px;
+      z-index: 0;
+    }
+
+    /* blue accent bar left */
+    .card-back::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, transparent, #4B91F7, #0ea5e9, transparent);
+      z-index: 1;
+    }
+
+    .back-inner {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      padding: 2.75rem 2.75rem 2.75rem 3.25rem;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .back-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .back-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    .back-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: #4B91F7;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .back-divider {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, #4B91F7, transparent);
+      margin: 0.75rem 0;
+    }
+
+    .back-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .contact-icon {
+      width: 18px;
+      height: 18px;
+      background: rgba(75,145,247,0.12);
+      border: 1px solid rgba(75,145,247,0.25);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      flex-shrink: 0;
+    }
+
+    .contact-text {
+      font-size: 0.78rem;
+      color: #aaa;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.02em;
+    }
+
+    .back-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 100%;
+      padding: 0.25rem 0;
+    }
+
+    .back-logo-small {
+      width: 90px;
+      height: auto;
+      filter: drop-shadow(0 0 12px rgba(75,145,247,0.35));
+      opacity: 0.9;
+    }
+
+    .back-website {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: #4B91F7;
+      text-transform: uppercase;
+      opacity: 0.7;
+      text-align: right;
+    }
+
+    .back-location {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      color: #444;
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    /* print styles */
+    @media print {
+      body { background: white; padding: 1cm; gap: 1cm; }
+      .card { box-shadow: none; }
+      .card-front::before { animation: none; }
+    }
+
+    /* responsive */
+    @media (max-width: 750px) {
+      .card { width: 340px; height: 204px; border-radius: 9px; }
+      .front-logo { width: 130px; }
+      .front-tagline { font-size: 0.5rem; }
+      .back-name { font-size: 0.85rem; }
+      .back-title { font-size: 0.5rem; }
+      .contact-text { font-size: 0.55rem; }
+      .back-logo-small { width: 50px; }
+      .back-inner { padding: 1.5rem 1.5rem 1.5rem 2rem; gap: 1rem; }
+      .back-website { font-size: 0.45rem; }
+      .corner { width: 16px; height: 16px; }
+      .corner-tl, .corner-tr { top: 8px; } .corner-bl, .corner-br { bottom: 8px; }
+      .corner-tl, .corner-bl { left: 8px; } .corner-tr, .corner-br { right: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>[ Business Card ] — 3000 Auto Detailing</h1>
+
+  <div class="cards-row">
+
+    <!-- FRONT -->
+    <div class="card-wrap">
+      <div class="card-label">Front</div>
+      <div class="card card-front">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <div class="front-watermark">3000</div>
+        <div class="front-inner">
+          <img src="logo-transparent.png" alt="3000 Auto Detailing" class="front-logo">
+          <div class="front-divider"></div>
+          <div class="front-tagline">Cleaner. Shinier. Better.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BACK -->
+    <div class="card-wrap">
+      <div class="card-label">Back</div>
+      <div class="card card-back">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <div class="back-inner">
+          <div class="back-left">
+            <div class="back-title">Mobile Car Detailing Specialist</div>
+            <div class="back-name">Gene Carlo<br>Gallardo</div>
+            <div class="back-divider"></div>
+            <div class="back-contacts">
+              <div class="contact-row">
+                <div class="contact-icon">📞</div>
+                <div class="contact-text">0420 418 888</div>
+              </div>
+              <div class="contact-row">
+                <div class="contact-icon">✉</div>
+                <div class="contact-text">info@3000autodetailing.com.au</div>
+              </div>
+              <div class="contact-row">
+                <div class="contact-icon">💬</div>
+                <div class="contact-text">wa.me/61420418888</div>
+              </div>
+              <div class="contact-row">
+                <div class="contact-icon">🌐</div>
+                <div class="contact-text">3000autodetailing.com.au</div>
+              </div>
+            </div>
+          </div>
+          <div class="back-right">
+            <img src="logo-transparent.png" alt="3000 Auto Detailing" class="back-logo-small">
+            <div>
+              <div class="back-website">3000autodetailing.com.au</div>
+              <div class="back-location">Melbourne, VIC · Australia</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
