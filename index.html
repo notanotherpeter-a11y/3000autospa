@@ -75,8 +75,8 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-    .nav-logo span { color: var(--accent-blue); }
+    .nav-logo { display: flex; align-items: center; }
+    .nav-logo img { height: 40px; width: auto; display: block; }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a { font-size: 0.8rem; color: var(--text-secondary); transition: color 0.2s; }
     .nav-links a:hover { color: var(--text-primary); }
@@ -361,8 +361,8 @@
     .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; padding: 0 1.25rem; }
     .faq-item.open .faq-a { max-height: 300px; padding: 0 1.25rem 1.1rem; }
     footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; position: relative; z-index: 2; }
-    .footer-logo { font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; }
-    .footer-logo span { color: var(--accent-blue); }
+    .footer-logo { display: flex; justify-content: center; margin-bottom: 0.75rem; }
+    .footer-logo img { height: 80px; width: auto; }
     .footer-sub { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.5rem; }
     .footer-links { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 2rem; flex-wrap: wrap; }
     .footer-links a { font-size: 0.78rem; color: var(--text-secondary); transition: color 0.2s; }
@@ -732,7 +732,7 @@
 <div class="fx-spotlight" id="spotlight"></div>
 
 <nav>
-  <div class="nav-logo">3000<span>.</span>AUTO<span>DETAILING</span></div>
+  <div class="nav-logo"><img src="logo-new.png" alt="3000 Auto Detailing"></div>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#pricing">Pricing</a></li>
@@ -1281,7 +1281,7 @@
 </div>
 
 <footer>
-  <div class="footer-logo">3000<span>.</span>AUTO<span>DETAILING</span></div>
+  <div class="footer-logo"><img src="logo-new.png" alt="3000 Auto Detailing"></div>
   <p class="footer-sub">Premium Home Car Detailing · Melbourne, Australia</p>
   <ul class="footer-links">
     <li><a href="#services">Services</a></li>
